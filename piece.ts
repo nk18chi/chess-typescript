@@ -1,27 +1,27 @@
 import { PLAYER_COLOR } from "./playerColor";
 import { TPosition } from "./position";
-import { SIGN } from "./sign";
+import { BLACK_SIGN, TSign, WHITE_SIGN } from "./sign";
 
 export type TPiece = {
   color: PLAYER_COLOR;
 };
 
 interface IPiece {
-  show(): void;
-  move(from: TPosition, to: TPosition): void;
+  show(): TSign;
+  validate(from: TPosition, to: TPosition): boolean;
   evolve(): void;
 }
 
 export abstract class Piece implements IPiece {
-  protected color: PLAYER_COLOR;
+  protected sign: TSign = null;
+  readonly color: PLAYER_COLOR;
   constructor({ color }: TPiece) {
     this.color = color;
   }
 
-  abstract show(): void;
-  abstract validate(): void;
+  abstract validate(from: TPosition, to: TPosition): boolean;
   abstract evolve(): void;
-  move() {
-    this.validate();
+  show() {
+    return this.sign;
   }
 }

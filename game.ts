@@ -13,7 +13,7 @@ enum COMMAND {
   MOVES = "moves",
 }
 
-const colorLength: number = Object.keys(PLAYER_COLOR).length;
+const colorLength: number = Object.keys(PLAYER_COLOR).length / 2;
 export class Game implements IGame {
   private board: Board = new Board(8);
   private input: Input = new Input();
@@ -22,12 +22,15 @@ export class Game implements IGame {
   private isGameOnGoing: boolean = true;
 
   async start() {
-    console.log("Game Start!\n");
+    console.log("Game Start!");
     this.isGameOnGoing = true;
     this.board.initialize();
     while (this.isGameOnGoing) {
       this.board.show();
-      if (this.board.isKingTaken((this.turn + 1) % colorLength)) break;
+      if (!this.board.isKing(this.turn)) {
+        this.switchTurn();
+        break;
+      }
       const isMoved = await this.isPlayerMoved();
       if (isMoved) this.switchTurn();
     }
@@ -53,8 +56,23 @@ export class Game implements IGame {
       case COMMAND.MOVES:
         return true;
       default:
-        if (/[a-z]+[0-9]+[a-z]+[0-9]+/.test(answer)) return true;
-        if (/[a-z]+[0-9]+/.test(answer)) return false;
+        const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
+        if (moveTo) {
+          try {
+            const from = this.board.parsePosition(moveTo[1]);
+            const to = this.board.parsePosition(moveTo[2]);
+            this.board.update(this.turn, from, to);
+            return true;
+          } catch (e) {
+            if (e instanceof Error) {
+              console.error(e.message);
+            }
+            return false;
+          }
+        }
+
+        const square = answer.match(/^([a-z]+[0-9]+)$/);
+        if (square) return false;
         return false;
     }
   }

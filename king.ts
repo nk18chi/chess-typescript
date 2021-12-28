@@ -5,19 +5,20 @@ import { BLACK_SIGN, WHITE_SIGN } from "./sign";
 export class King extends Piece {
   constructor(props: TPiece) {
     super(props);
-  }
-
-  show() {
     switch (this.color) {
       case PLAYER_COLOR.WHITE:
-        return WHITE_SIGN.KING;
+        this.sign = WHITE_SIGN.KING;
+        break;
       case PLAYER_COLOR.BLACK:
-        return BLACK_SIGN.KING;
+        this.sign = BLACK_SIGN.KING;
+        break;
       default:
-        return "?";
+        this.sign = null;
     }
   }
-  move() {}
+
   evolve() {}
-  validate() {}
+  validate() {
+    return true;
+  }
 }

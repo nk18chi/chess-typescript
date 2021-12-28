@@ -1,12 +1,3 @@
-export enum SIGN {
-  KING,
-  QUEEN,
-  ROCK,
-  BITSHOP,
-  KNIGHT,
-  PAWN,
-}
-
 export enum WHITE_SIGN {
   KING = "♔",
   QUEEN = "♕",
@@ -24,3 +15,6 @@ export enum BLACK_SIGN {
   KNIGHT = "♞",
   PAWN = "♟",
 }
+
+export type TSign = WHITE_SIGN | BLACK_SIGN | null;
+export const KINGS: TSign[] = [WHITE_SIGN.KING, BLACK_SIGN.KING];
