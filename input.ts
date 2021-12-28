@@ -1,7 +1,7 @@
 import * as readline from "readline";
 
 interface IInput {
-  type(): Promise<string>;
+  type(message: string): Promise<string>;
 }
 
 const rl = readline.createInterface({
@@ -10,7 +10,7 @@ const rl = readline.createInterface({
   terminal: false,
 });
 export class Input implements IInput {
-  async type(): Promise<string> {
-    return await new Promise<string>((resolve) => rl.question("Enter UCI(type 'help' for help)", (input) => resolve(input)));
+  async type(message: string): Promise<string> {
+    return await new Promise<string>((resolve) => rl.question(message, (input) => resolve(input)));
   }
 }

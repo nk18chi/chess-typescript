@@ -3,6 +3,7 @@ import { Input } from "./input";
 import { PLAYER_COLOR } from "./playerColor";
 
 interface IGame {
+  initialize(): void;
   start(): void;
 }
 
@@ -18,8 +19,16 @@ export class Game implements IGame {
   private board: Board = new Board(8);
   private input: Input = new Input();
   private turn: number = 0;
-  private winCount: number[] = new Array(colorLength).fill(0);
   private isGameOnGoing: boolean = true;
+  private winCountMap: { [key: string]: number } = {};
+
+  initialize() {
+    Object.values(PLAYER_COLOR).map((color) => {
+      if (typeof color === "string") {
+        this.winCountMap[color] = 0;
+      }
+    });
+  }
 
   async start() {
     console.log("Game Start!");
@@ -34,15 +43,21 @@ export class Game implements IGame {
       const isMoved = await this.isPlayerMoved();
       if (isMoved) this.switchTurn();
     }
-    console.log(`${PLAYER_COLOR[this.turn]} won! - result: ${this.winCount.join(" - ")}`);
-    if (await this.isRestart()) this.start();
 
+    console.log(`${PLAYER_COLOR[this.turn]} won!\n`);
+    this.winCountMap[PLAYER_COLOR[this.turn]] += 1;
+    Object.entries(this.winCountMap).map(([key, value]) => {
+      console.log(`${key}: ${value}`);
+    });
+    console.log("");
+
+    if (await this.isRestart()) this.start();
     console.log("Game End!");
   }
   private async isPlayerMoved() {
     console.log(`${PLAYER_COLOR[this.turn]} to move`);
 
-    const answer: string = (await this.input.type()).toLowerCase();
+    const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
     switch (answer) {
       case COMMAND.HELP:
         console.log("show help");
@@ -78,8 +93,7 @@ export class Game implements IGame {
   }
 
   private async isRestart(): Promise<boolean> {
-    console.log(`do you wanna restart playing? yes or no`);
-    const answer: string = (await this.input.type()).toLowerCase();
+    const answer: string = (await this.input.type("do you wanna restart playing? yes or no ")).toLowerCase();
     switch (answer) {
       case "yes":
         return true;

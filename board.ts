@@ -80,8 +80,6 @@ export class Board implements IBoard {
     if (!piece.validate(from, to)) throw new Error("the piece cannot move to the destination");
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
-    console.log(dest);
-
     if (dest && KINGS.includes(dest.show())) {
       this.aliveKingsMap[dest.color] = false;
     }
