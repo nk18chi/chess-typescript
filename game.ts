@@ -32,6 +32,7 @@ export class Game implements IGame {
 
   async start() {
     console.log("Game Start!");
+    this.turn = 0;
     this.isGameOnGoing = true;
     this.board.initialize();
     while (this.isGameOnGoing) {
@@ -40,8 +41,8 @@ export class Game implements IGame {
         this.switchTurn();
         break;
       }
-      const isMoved = await this.isPlayerMoved();
-      if (isMoved) this.switchTurn();
+      await this.isPlayerMoved();
+      this.switchTurn();
     }
 
     console.log(`${PLAYER_COLOR[this.turn]} won!\n`);
@@ -52,43 +53,48 @@ export class Game implements IGame {
     console.log("");
 
     if (await this.isRestart()) this.start();
-    console.log("Game End!");
+    else console.log("Game End!");
   }
   private async isPlayerMoved() {
-    console.log(`${PLAYER_COLOR[this.turn]} to move`);
+    while (true) {
+      console.log(`${PLAYER_COLOR[this.turn]} to move`);
 
-    const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
-    switch (answer) {
-      case COMMAND.HELP:
-        console.log("show help");
-        return false;
-      case COMMAND.BOARD:
-        this.board.show();
-        return false;
-      case COMMAND.RESIGN:
-        this.isGameOnGoing = false;
-        return false;
-      case COMMAND.MOVES:
-        return true;
-      default:
-        const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
-        if (moveTo) {
-          try {
-            const from = this.board.parsePosition(moveTo[1]);
-            const to = this.board.parsePosition(moveTo[2]);
-            this.board.update(this.turn, from, to);
-            return true;
-          } catch (e) {
-            if (e instanceof Error) {
-              console.error(e.message);
+      const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
+      switch (answer) {
+        case COMMAND.HELP:
+          console.log("* type 'help' for help");
+          console.log("* type 'board' to see the board again");
+          console.log("* type 'resign' to resign");
+          console.log("* type 'moves' to list all possible moves");
+          console.log("* type a square(ex. b1, e2) to list possible moves for that squares");
+          console.log("* type UCI(ex. b1c3, e7e8q) to make a move");
+          console.log();
+          break;
+        case COMMAND.BOARD:
+          this.board.show();
+          break;
+        case COMMAND.RESIGN:
+          this.isGameOnGoing = false;
+          return;
+        case COMMAND.MOVES:
+          return;
+        default:
+          const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
+          if (moveTo) {
+            try {
+              const from = this.board.parsePosition(moveTo[1]);
+              const to = this.board.parsePosition(moveTo[2]);
+              this.board.update(this.turn, from, to);
+              return;
+            } catch (e) {
+              if (e instanceof Error) {
+                console.error(e.message);
+              }
             }
-            return false;
           }
-        }
 
-        const square = answer.match(/^([a-z]+[0-9]+)$/);
-        if (square) return false;
-        return false;
+          const square = answer.match(/^([a-z]+[0-9]+)$/);
+      }
     }
   }
 
