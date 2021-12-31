@@ -1,7 +1,7 @@
 export enum WHITE_SIGN {
   KING = "♔",
   QUEEN = "♕",
-  ROCK = "♖",
+  ROOK = "♖",
   BITSHOP = "♗",
   KNIGHT = "♘",
   PAWN = "♙",
@@ -10,7 +10,7 @@ export enum WHITE_SIGN {
 export enum BLACK_SIGN {
   KING = "♚",
   QUEEN = "♛",
-  ROCK = "♜",
+  ROOK = "♜",
   BITSHOP = "♝",
   KNIGHT = "♞",
   PAWN = "♟",

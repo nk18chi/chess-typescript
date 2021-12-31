@@ -2,6 +2,7 @@ import { King } from "./king";
 import { Piece } from "./piece";
 import { PLAYER_COLOR } from "./playerColor";
 import { TPosition } from "./position";
+import { Rook } from "./rook";
 import { KINGS } from "./sign";
 
 interface IBoard {
@@ -9,7 +10,6 @@ interface IBoard {
   show(): void;
   parsePosition(position: string): TPosition;
   update(turn: PLAYER_COLOR, from: TPosition, to: TPosition): void;
-  isCheckmated(): boolean;
   isKing(color: PLAYER_COLOR): boolean;
 }
 
@@ -25,11 +25,19 @@ export class Board implements IBoard {
     // reset all cells
     this.cells = Array.from(Array(this.mapSize), () => new Array(this.mapSize).fill(null));
 
-    // set each pieces
-    this.cells[0][4] = new King({ color: PLAYER_COLOR.BLACK });
-    this.cells[7][3] = new King({ color: PLAYER_COLOR.WHITE });
+    // set king alive map
     this.aliveKingsMap[PLAYER_COLOR.WHITE] = true;
     this.aliveKingsMap[PLAYER_COLOR.BLACK] = true;
+
+    // set kings
+    this.cells[0][4] = new King({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][3] = new King({ color: PLAYER_COLOR.WHITE });
+
+    // set rooks
+    this.cells[0][0] = new Rook({ color: PLAYER_COLOR.BLACK });
+    this.cells[0][7] = new Rook({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][0] = new Rook({ color: PLAYER_COLOR.WHITE });
+    this.cells[7][7] = new Rook({ color: PLAYER_COLOR.WHITE });
   }
   show() {
     console.log("");
@@ -42,7 +50,7 @@ export class Board implements IBoard {
             return piece.show();
           })
           .join("|")
-          .concat(`${i--}`)
+          .concat(` ${i--}`)
       );
     });
     console.log("");
@@ -78,6 +86,7 @@ export class Board implements IBoard {
     if (piece.color !== turn) throw new Error("the piece that you are trying to move is not yours");
     if (dest?.color === turn) throw new Error("the piece that you are trying to capture is yours");
     if (!piece.validate(from, to)) throw new Error("the piece cannot move to the destination");
+    if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
     if (dest && KINGS.includes(dest.show())) {
@@ -85,10 +94,36 @@ export class Board implements IBoard {
     }
   }
 
-  isCheckmated() {
-    return false;
-  }
   isKing(color: PLAYER_COLOR) {
     return this.aliveKingsMap[color];
+  }
+
+  private isPieceOnWay(from: TPosition, to: TPosition): boolean {
+    const xDiff: number = to.col - from.col;
+    const yDiff: number = to.row - from.row;
+    let x = 0;
+    let y = 0;
+    const gcd = (x: number, y: number): number => {
+      if (y !== 0) return gcd(y, x % y);
+      return x;
+    };
+
+    if (xDiff === 0) {
+      y = yDiff > 0 ? 1 : -1;
+    } else if (yDiff === 0) {
+      x = xDiff > 0 ? 1 : -1;
+    } else {
+      const n = gcd(Math.abs(xDiff), Math.abs(yDiff));
+      x = xDiff / n;
+      y = yDiff / n;
+    }
+
+    const cur: TPosition = { ...from };
+    while (cur.row !== to.row || cur.col !== to.col) {
+      cur.row += y;
+      cur.col += x;
+      if (this.cells[cur.row][cur.col]) return true;
+    }
+    return false;
   }
 }
