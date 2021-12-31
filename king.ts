@@ -17,6 +17,7 @@ export class King extends Piece {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   evolve() {}
   validate() {
     return true;

@@ -14,7 +14,7 @@ interface IBoard {
 }
 
 export class Board implements IBoard {
-  private mapSize: number = 8;
+  private mapSize = 8;
   private cells: (Piece | null)[][] = [[]];
   private aliveKingsMap: { [key: number]: boolean } = {};
   constructor(mapSize: number) {
@@ -50,7 +50,7 @@ export class Board implements IBoard {
     console.log(
       new Array(this.mapSize)
         .fill("")
-        .map((_) => String.fromCharCode(i++ + 96))
+        .map(() => String.fromCharCode(i++ + 96))
         .join(" ")
     );
     console.log("");

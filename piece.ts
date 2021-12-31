@@ -1,6 +1,6 @@
 import { PLAYER_COLOR } from "./playerColor";
 import { TPosition } from "./position";
-import { BLACK_SIGN, TSign, WHITE_SIGN } from "./sign";
+import { TSign } from "./sign";
 
 export type TPiece = {
   color: PLAYER_COLOR;

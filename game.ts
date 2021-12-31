@@ -18,8 +18,8 @@ const colorLength: number = Object.keys(PLAYER_COLOR).length / 2;
 export class Game implements IGame {
   private board: Board = new Board(8);
   private input: Input = new Input();
-  private turn: number = 0;
-  private isGameOnGoing: boolean = true;
+  private turn = 0;
+  private isGameOnGoing = true;
   private winCountMap: { [key: string]: number } = {};
 
   initialize() {
@@ -56,10 +56,13 @@ export class Game implements IGame {
     else console.log("Game End!");
   }
   private async isPlayerMoved() {
-    while (true) {
+    let isPlayerActionDone = false;
+    while (!isPlayerActionDone) {
       console.log(`${PLAYER_COLOR[this.turn]} to move`);
 
       const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
+      const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
+      // const square = answer.match(/^([a-z]+[0-9]+)$/);
       switch (answer) {
         case COMMAND.HELP:
           console.log("* type 'help' for help");
@@ -75,25 +78,25 @@ export class Game implements IGame {
           break;
         case COMMAND.RESIGN:
           this.isGameOnGoing = false;
-          return;
+          isPlayerActionDone = true;
+          break;
         case COMMAND.MOVES:
-          return;
+          isPlayerActionDone = true;
+          break;
         default:
-          const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
           if (moveTo) {
             try {
               const from = this.board.parsePosition(moveTo[1]);
               const to = this.board.parsePosition(moveTo[2]);
               this.board.update(this.turn, from, to);
-              return;
+              isPlayerActionDone = true;
+              break;
             } catch (e) {
               if (e instanceof Error) {
                 console.error(e.message);
               }
             }
           }
-
-          const square = answer.match(/^([a-z]+[0-9]+)$/);
       }
     }
   }

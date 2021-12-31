@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec npx ts-node ./index.ts",
+    "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,9 @@
   },
   "homepage": "https://github.com/nk18chi/chess-typescript#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^8.5.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   }
