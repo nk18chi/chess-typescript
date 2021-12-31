@@ -1,5 +1,6 @@
 import { Piece, TPiece } from "./piece";
 import { PLAYER_COLOR } from "./playerColor";
+import { TPosition } from "./position";
 import { BLACK_SIGN, WHITE_SIGN } from "./sign";
 
 export class King extends Piece {
@@ -17,9 +18,9 @@ export class King extends Piece {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  evolve() {}
-  validate() {
+  validate(from: TPosition, to: TPosition) {
+    if (Math.abs(from.row - to.row) > 1) return false;
+    if (Math.abs(from.col - to.col) > 1) return false;
     return true;
   }
 }

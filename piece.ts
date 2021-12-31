@@ -9,7 +9,6 @@ export type TPiece = {
 interface IPiece {
   show(): TSign;
   validate(from: TPosition, to: TPosition): boolean;
-  evolve(): void;
 }
 
 export abstract class Piece implements IPiece {
@@ -20,7 +19,6 @@ export abstract class Piece implements IPiece {
   }
 
   abstract validate(from: TPosition, to: TPosition): boolean;
-  abstract evolve(): void;
   show() {
     return this.sign;
   }
