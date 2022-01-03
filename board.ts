@@ -1,3 +1,4 @@
+import { Bishop } from "./bishop";
 import { King } from "./king";
 import { Piece } from "./piece";
 import { PLAYER_COLOR } from "./playerColor";
@@ -38,6 +39,12 @@ export class Board implements IBoard {
     this.cells[0][7] = new Rook({ color: PLAYER_COLOR.BLACK });
     this.cells[7][0] = new Rook({ color: PLAYER_COLOR.WHITE });
     this.cells[7][7] = new Rook({ color: PLAYER_COLOR.WHITE });
+
+    // set bitshops
+    this.cells[0][2] = new Bishop({ color: PLAYER_COLOR.BLACK });
+    this.cells[0][5] = new Bishop({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][2] = new Bishop({ color: PLAYER_COLOR.WHITE });
+    this.cells[7][5] = new Bishop({ color: PLAYER_COLOR.WHITE });
   }
   show() {
     console.log("");
