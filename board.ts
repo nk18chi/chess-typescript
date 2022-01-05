@@ -33,8 +33,8 @@ export class Board implements IBoard {
     this.aliveKingsMap[PLAYER_COLOR.BLACK] = true;
 
     // set kings
-    this.cells[0][5] = new King({ color: PLAYER_COLOR.BLACK });
-    this.cells[7][5] = new King({ color: PLAYER_COLOR.WHITE });
+    this.cells[0][4] = new King({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][4] = new King({ color: PLAYER_COLOR.WHITE });
 
     // set rooks
     this.cells[0][0] = new Rook({ color: PLAYER_COLOR.BLACK });
