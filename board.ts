@@ -1,5 +1,6 @@
 import { Bishop } from "./bishop";
 import { King } from "./king";
+import { Knight } from "./knight";
 import { Piece } from "./piece";
 import { PLAYER_COLOR } from "./playerColor";
 import { TPosition } from "./position";
@@ -50,6 +51,12 @@ export class Board implements IBoard {
     // set queen
     this.cells[0][3] = new Queen({ color: PLAYER_COLOR.BLACK });
     this.cells[7][3] = new Queen({ color: PLAYER_COLOR.WHITE });
+
+    // set night
+    this.cells[0][1] = new Knight({ color: PLAYER_COLOR.BLACK });
+    this.cells[0][6] = new Knight({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][1] = new Knight({ color: PLAYER_COLOR.WHITE });
+    this.cells[7][6] = new Knight({ color: PLAYER_COLOR.WHITE });
   }
   show() {
     console.log("");
