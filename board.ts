@@ -3,6 +3,7 @@ import { King } from "./king";
 import { Piece } from "./piece";
 import { PLAYER_COLOR } from "./playerColor";
 import { TPosition } from "./position";
+import { Queen } from "./queen";
 import { Rook } from "./rook";
 import { KINGS } from "./sign";
 
@@ -31,8 +32,8 @@ export class Board implements IBoard {
     this.aliveKingsMap[PLAYER_COLOR.BLACK] = true;
 
     // set kings
-    this.cells[0][4] = new King({ color: PLAYER_COLOR.BLACK });
-    this.cells[7][3] = new King({ color: PLAYER_COLOR.WHITE });
+    this.cells[0][5] = new King({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][5] = new King({ color: PLAYER_COLOR.WHITE });
 
     // set rooks
     this.cells[0][0] = new Rook({ color: PLAYER_COLOR.BLACK });
@@ -45,6 +46,10 @@ export class Board implements IBoard {
     this.cells[0][5] = new Bishop({ color: PLAYER_COLOR.BLACK });
     this.cells[7][2] = new Bishop({ color: PLAYER_COLOR.WHITE });
     this.cells[7][5] = new Bishop({ color: PLAYER_COLOR.WHITE });
+
+    // set queen
+    this.cells[0][3] = new Queen({ color: PLAYER_COLOR.BLACK });
+    this.cells[7][3] = new Queen({ color: PLAYER_COLOR.WHITE });
   }
   show() {
     console.log("");
