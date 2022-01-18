@@ -1,7 +1,7 @@
 import { Piece, TPiece } from "./piece";
-import { PLAYER_COLOR } from "./playerColor";
-import { TPosition } from "./position";
-import { BLACK_SIGN, WHITE_SIGN } from "./sign";
+import { PLAYER_COLOR } from "../playerColor";
+import { BLACK_SIGN, WHITE_SIGN } from "../sign";
+import { Taxis } from "../axis";
 
 export class King extends Piece {
   constructor(props: TPiece) {
@@ -18,9 +18,9 @@ export class King extends Piece {
     }
   }
 
-  validate(from: TPosition, to: TPosition) {
-    if (Math.abs(from.row - to.row) > 1) return false;
-    if (Math.abs(from.col - to.col) > 1) return false;
+  validate(axis: Taxis) {
+    if (Math.abs(axis.x) > 1) return false;
+    if (Math.abs(axis.y) > 1) return false;
     return true;
   }
 }

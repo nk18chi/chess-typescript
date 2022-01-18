@@ -1,7 +1,7 @@
 import { Piece, TPiece } from "./piece";
-import { PLAYER_COLOR } from "./playerColor";
-import { TPosition } from "./position";
-import { BLACK_SIGN, WHITE_SIGN } from "./sign";
+import { PLAYER_COLOR } from "../playerColor";
+import { BLACK_SIGN, WHITE_SIGN } from "../sign";
+import { Taxis } from "../axis";
 
 export class Bishop extends Piece {
   constructor(props: TPiece) {
@@ -18,7 +18,7 @@ export class Bishop extends Piece {
     }
   }
 
-  validate(from: TPosition, to: TPosition) {
-    return Math.abs(from.row - to.row) === Math.abs(from.col - to.col);
+  validate(axis: Taxis) {
+    return Math.abs(axis.x) === Math.abs(axis.y);
   }
 }

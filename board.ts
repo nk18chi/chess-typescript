@@ -1,12 +1,14 @@
-import { Bishop } from "./bishop";
-import { King } from "./king";
-import { Knight } from "./knight";
-import { Piece } from "./piece";
+import { Bishop } from "./pieces/bishop";
+import { King } from "./pieces/king";
+import { Knight } from "./pieces/knight";
+import { Pawn } from "./pieces/pawn";
+import { Piece } from "./pieces/piece";
 import { PLAYER_COLOR } from "./playerColor";
-import { TPosition } from "./position";
-import { Queen } from "./queen";
-import { Rook } from "./rook";
+import { Queen } from "./pieces/queen";
+import { Rook } from "./pieces/rook";
 import { KINGS } from "./sign";
+import { Taxis } from "./axis";
+import { TPosition } from "./position";
 
 interface IBoard {
   initialize(): void;
@@ -57,6 +59,12 @@ export class Board implements IBoard {
     this.cells[0][6] = new Knight({ color: PLAYER_COLOR.BLACK });
     this.cells[7][1] = new Knight({ color: PLAYER_COLOR.WHITE });
     this.cells[7][6] = new Knight({ color: PLAYER_COLOR.WHITE });
+
+    // set pawn
+    for (let i = 0; i < this.mapSize; i++) {
+      this.cells[1][i] = new Pawn({ color: PLAYER_COLOR.BLACK });
+      this.cells[6][i] = new Pawn({ color: PLAYER_COLOR.WHITE });
+    }
   }
   show() {
     console.log("");
@@ -104,10 +112,22 @@ export class Board implements IBoard {
     if (!piece) throw new Error("there is no piece that you are trying to move");
     if (piece.color !== turn) throw new Error("the piece that you are trying to move is not yours");
     if (dest?.color === turn) throw new Error("the piece that you are trying to capture is yours");
-    if (!piece.validate(from, to)) throw new Error("the piece cannot move to the destination");
+
+    const axis: Taxis = {
+      x: from.col - to.col,
+      y: from.row - to.row,
+    };
+    if (turn === PLAYER_COLOR.BLACK) {
+      axis.x *= -1;
+      axis.y *= -1;
+    }
+    console.log(dest);
+
+    if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
     if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
+    piece.moved();
     if (dest && KINGS.includes(dest.show())) {
       this.aliveKingsMap[dest.color] = false;
     }
@@ -138,6 +158,8 @@ export class Board implements IBoard {
     }
 
     const cur: TPosition = { ...from };
+    cur.row += y;
+    cur.col += x;
     while (cur.row !== to.row || cur.col !== to.col) {
       cur.row += y;
       cur.col += x;
