@@ -18,7 +18,8 @@ export class Queen extends Piece {
     }
   }
 
-  validate(axis: Taxis) {
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (!super.validate(axis, isEnemy)) return false;
     if (Math.abs(axis.x) === Math.abs(axis.y)) return true;
     if (axis.x === 0 || axis.y === 0) return true;
     return false;

@@ -18,7 +18,8 @@ export class Rook extends Piece {
     }
   }
 
-  validate(axis: Taxis) {
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (!super.validate(axis, isEnemy)) return false;
     if (Math.abs(axis.y) > 0 && Math.abs(axis.x) > 0) return false;
     return true;
   }

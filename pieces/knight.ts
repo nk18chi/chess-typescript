@@ -18,7 +18,8 @@ export class Knight extends Piece {
     }
   }
 
-  validate(axis: Taxis) {
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (!super.validate(axis, isEnemy)) return false;
     if (Math.abs(axis.x) === 2 && Math.abs(axis.y) === 1) return true;
     if (Math.abs(axis.x) === 1 && Math.abs(axis.y) === 2) return true;
     return false;

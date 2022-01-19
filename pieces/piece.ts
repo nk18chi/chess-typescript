@@ -12,7 +12,7 @@ interface IPiece {
   validate(axis: Taxis, isEnemy: boolean): boolean;
 }
 
-export abstract class Piece implements IPiece {
+export class Piece implements IPiece {
   protected sign: TSign = null;
   protected isMoved = false;
   readonly color: PLAYER_COLOR;
@@ -20,7 +20,11 @@ export abstract class Piece implements IPiece {
     this.color = color;
   }
 
-  abstract validate(axis: Taxis, isEnemy: boolean): boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (axis.x === 0 && axis.y === 0) return false;
+    return true;
+  }
   moved() {
     this.isMoved = true;
   }

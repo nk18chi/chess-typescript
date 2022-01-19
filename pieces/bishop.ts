@@ -18,7 +18,8 @@ export class Bishop extends Piece {
     }
   }
 
-  validate(axis: Taxis) {
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (!super.validate(axis, isEnemy)) return false;
     return Math.abs(axis.x) === Math.abs(axis.y);
   }
 }

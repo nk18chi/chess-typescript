@@ -18,7 +18,8 @@ export class King extends Piece {
     }
   }
 
-  validate(axis: Taxis) {
+  validate(axis: Taxis, isEnemy: boolean) {
+    if (!super.validate(axis, isEnemy)) return false;
     if (Math.abs(axis.x) > 1) return false;
     if (Math.abs(axis.y) > 1) return false;
     return true;
