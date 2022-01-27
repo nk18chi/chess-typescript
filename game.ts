@@ -3,8 +3,10 @@ import { Input } from "./input";
 import { PLAYER_COLOR } from "./playerColor";
 
 interface IGame {
-  initialize(): void;
   start(): void;
+  end(): void;
+  isContinue(): Promise<boolean>;
+  resetScore(): void;
 }
 
 enum COMMAND {
@@ -22,7 +24,7 @@ export class Game implements IGame {
   private isGameOnGoing = true;
   private winCountMap: { [key: string]: number } = {};
 
-  initialize() {
+  resetScore() {
     Object.values(PLAYER_COLOR).map((color) => {
       if (typeof color === "string") {
         this.winCountMap[color] = 0;
@@ -50,11 +52,24 @@ export class Game implements IGame {
     Object.entries(this.winCountMap).map(([key, value]) => {
       console.log(`${key}: ${value}`);
     });
-    console.log("");
-
-    if (await this.isRestart()) this.start();
-    else console.log("Game End!");
   }
+
+  end() {
+    console.log("Game End!");
+  }
+
+  async isContinue(): Promise<boolean> {
+    const answer: string = (await this.input.type("do you wanna restart playing? yes or no ")).toLowerCase();
+    switch (answer) {
+      case "yes":
+        return true;
+      case "no":
+        return false;
+      default:
+        return this.isContinue();
+    }
+  }
+
   private async isPlayerMoved() {
     let isPlayerActionDone = false;
     while (!isPlayerActionDone) {
@@ -98,18 +113,6 @@ export class Game implements IGame {
             }
           }
       }
-    }
-  }
-
-  private async isRestart(): Promise<boolean> {
-    const answer: string = (await this.input.type("do you wanna restart playing? yes or no ")).toLowerCase();
-    switch (answer) {
-      case "yes":
-        return true;
-      case "no":
-        return false;
-      default:
-        return this.isRestart();
     }
   }
 

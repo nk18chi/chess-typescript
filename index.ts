@@ -1,5 +1,11 @@
 import { Game } from "./game";
 
-const game = new Game();
-game.initialize();
-game.start();
+(async () => {
+  const game = new Game();
+  game.resetScore();
+  await game.start();
+  while (await game.isContinue()) {
+    await game.start();
+  }
+  game.end();
+})();

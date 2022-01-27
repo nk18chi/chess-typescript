@@ -1,4 +1,4 @@
-import * as readline from "readline";
+import readline from "readline";
 
 interface IInput {
   type(message: string): Promise<string>;
