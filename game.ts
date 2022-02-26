@@ -6,7 +6,6 @@ interface IGame {
   start(): void;
   end(): void;
   isContinue(): Promise<boolean>;
-  resetScore(): void;
 }
 
 enum COMMAND {
@@ -18,18 +17,14 @@ enum COMMAND {
 
 const colorLength: number = Object.keys(PLAYER_COLOR).length / 2;
 export class Game implements IGame {
+  readonly input: Input = new Input();
   private board: Board = new Board(8);
-  private input: Input = new Input();
   private turn = 0;
   private isGameOnGoing = true;
   private winCountMap: { [key: string]: number } = {};
 
-  resetScore() {
-    Object.values(PLAYER_COLOR).map((color) => {
-      if (typeof color === "string") {
-        this.winCountMap[color] = 0;
-      }
-    });
+  constructor() {
+    this.resetScore();
   }
 
   async start() {
@@ -43,7 +38,7 @@ export class Game implements IGame {
         this.switchTurn();
         break;
       }
-      await this.isPlayerMoved();
+      await this.playerAction();
       this.switchTurn();
     }
 
@@ -70,11 +65,18 @@ export class Game implements IGame {
     }
   }
 
-  private async isPlayerMoved() {
+  private resetScore() {
+    Object.values(PLAYER_COLOR).map((color) => {
+      if (typeof color === "string") {
+        this.winCountMap[color] = 0;
+      }
+    });
+  }
+
+  private async playerAction() {
     let isPlayerActionDone = false;
     while (!isPlayerActionDone) {
       console.log(`${PLAYER_COLOR[this.turn]} to move`);
-
       const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
       const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
       // const square = answer.match(/^([a-z]+[0-9]+)$/);

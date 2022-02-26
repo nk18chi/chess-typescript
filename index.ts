@@ -2,7 +2,6 @@ import { Game } from "./game";
 
 (async () => {
   const game = new Game();
-  game.resetScore();
   await game.start();
   while (await game.isContinue()) {
     await game.start();
