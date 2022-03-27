@@ -92,7 +92,7 @@ export class Board implements IBoard {
   }
 
   parsePosition(position: string) {
-    const matches = position.toLowerCase().match(/^([a-z]+)([0-9]+)$/);
+    const matches = position.toLowerCase().match(/^([a-z])([0-9])$/);
     if (!matches) throw new Error("wrong type..");
     return {
       row: this.mapSize - parseInt(matches[2], 10),
@@ -102,10 +102,10 @@ export class Board implements IBoard {
 
   update(turn: PLAYER_COLOR, from: TPosition, to: TPosition) {
     const errorOutOfBoard = "your select is out of the board";
-    if (from.row < 0 || this.mapSize < from.row) throw new Error(errorOutOfBoard);
-    if (from.col < 0 || this.mapSize < from.col) throw new Error(errorOutOfBoard);
-    if (to.row < 0 || this.mapSize < to.row) throw new Error(errorOutOfBoard);
-    if (to.col < 0 || this.mapSize < to.col) throw new Error(errorOutOfBoard);
+    if (from.row < 0 || this.mapSize <= from.row) throw new Error(errorOutOfBoard);
+    if (from.col < 0 || this.mapSize <= from.col) throw new Error(errorOutOfBoard);
+    if (to.row < 0 || this.mapSize <= to.row) throw new Error(errorOutOfBoard);
+    if (to.col < 0 || this.mapSize <= to.col) throw new Error(errorOutOfBoard);
 
     const piece = this.cells[from.row][from.col];
     const dest = this.cells[to.row][to.col];
@@ -121,7 +121,6 @@ export class Board implements IBoard {
       axis.x *= -1;
       axis.y *= -1;
     }
-    console.log(dest);
 
     if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
     if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
@@ -161,9 +160,9 @@ export class Board implements IBoard {
     cur.row += y;
     cur.col += x;
     while (cur.row !== to.row || cur.col !== to.col) {
+      if (this.cells[cur.row][cur.col]) return true;
       cur.row += y;
       cur.col += x;
-      if (this.cells[cur.row][cur.col]) return true;
     }
     return false;
   }
