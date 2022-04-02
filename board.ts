@@ -2,7 +2,7 @@ import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
 import { Pawn } from "./pieces/pawn";
-import { Piece } from "./pieces/piece";
+import { Piece, PROMOTION_STRING } from "./pieces/piece";
 import { PLAYER_COLOR } from "./playerColor";
 import { Queen } from "./pieces/queen";
 import { Rook } from "./pieces/rook";
@@ -14,7 +14,7 @@ interface IBoard {
   initialize(): void;
   show(): void;
   parsePosition(position: string): TPosition;
-  update(turn: PLAYER_COLOR, from: TPosition, to: TPosition): void;
+  update(turn: PLAYER_COLOR, from: TPosition, to: TPosition, promotion: PROMOTION_STRING | null): void;
   isKing(color: PLAYER_COLOR): boolean;
 }
 
@@ -100,7 +100,7 @@ export class Board implements IBoard {
     };
   }
 
-  update(turn: PLAYER_COLOR, from: TPosition, to: TPosition) {
+  update(turn: PLAYER_COLOR, from: TPosition, to: TPosition, promotion: PROMOTION_STRING | null = null) {
     const errorOutOfBoard = "your select is out of the board";
     if (from.row < 0 || this.mapSize <= from.row) throw new Error(errorOutOfBoard);
     if (from.col < 0 || this.mapSize <= from.col) throw new Error(errorOutOfBoard);
@@ -124,6 +124,12 @@ export class Board implements IBoard {
 
     if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
     if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
+    if (piece.shouldPromotion(to, this.mapSize)) {
+      if (!promotion) throw new Error("the piece must promote");
+      const newPiece = piece.promotion(promotion);
+      if (!newPiece) throw new Error("the piece is not allowed to promote");
+      this.cells[from.row][from.col] = newPiece;
+    }
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
     piece.moved();

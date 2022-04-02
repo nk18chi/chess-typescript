@@ -1,5 +1,6 @@
 import { Board } from "./board";
 import { Input } from "./input";
+import { getPromotionEnum, PROMOTION_STRING } from "./pieces/piece";
 import { PLAYER_COLOR } from "./playerColor";
 
 interface IGame {
@@ -78,7 +79,7 @@ export class Game implements IGame {
     while (!isPlayerActionDone) {
       console.log(`${PLAYER_COLOR[this.turn]} to move`);
       const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
-      const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)$/);
+      const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)([q,r,b,k]{0,1})$/);
       // const square = answer.match(/^([a-z]+[0-9]+)$/);
       switch (answer) {
         case COMMAND.HELP:
@@ -105,7 +106,8 @@ export class Game implements IGame {
             try {
               const from = this.board.parsePosition(moveTo[1]);
               const to = this.board.parsePosition(moveTo[2]);
-              this.board.update(this.turn, from, to);
+              const promotion = getPromotionEnum(moveTo[3]);
+              this.board.update(this.turn, from, to, promotion);
               isPlayerActionDone = true;
               break;
             } catch (e) {

@@ -1,7 +1,12 @@
-import { Piece, TPiece } from "./piece";
+import { Piece, PROMOTION_STRING, TPiece } from "./piece";
 import { PLAYER_COLOR } from "../playerColor";
 import { BLACK_SIGN, WHITE_SIGN } from "../sign";
 import { Taxis } from "../axis";
+import { Queen } from "./queen";
+import { Rook } from "./rook";
+import { Bishop } from "./bishop";
+import { Knight } from "./knight";
+import { TPosition } from "../position";
 
 export class Pawn extends Piece {
   constructor(props: TPiece) {
@@ -15,6 +20,35 @@ export class Pawn extends Piece {
         break;
       default:
         this.sign = null;
+    }
+  }
+
+  shouldPromotion(position: TPosition, maxRow: number) {
+    switch (this.color) {
+      case PLAYER_COLOR.WHITE:
+        if (position.row !== 0) return false;
+        break;
+      case PLAYER_COLOR.BLACK:
+        if (position.row !== maxRow - 1) return false;
+        break;
+      default:
+        return false;
+    }
+    return true;
+  }
+
+  promotion(pieceString: PROMOTION_STRING | null) {
+    switch (pieceString) {
+      case PROMOTION_STRING.QUEEN:
+        return new Queen({ color: this.color });
+      case PROMOTION_STRING.ROOK:
+        return new Rook({ color: this.color });
+      case PROMOTION_STRING.BISHOP:
+        return new Bishop({ color: this.color });
+      case PROMOTION_STRING.KNIGHT:
+        return new Knight({ color: this.color });
+      default:
+        return null;
     }
   }
 

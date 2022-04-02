@@ -1,15 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Taxis } from "../axis";
 import { PLAYER_COLOR } from "../playerColor";
+import { TPosition } from "../position";
 import { TSign } from "../sign";
 
 export type TPiece = {
   color: PLAYER_COLOR;
 };
 
+export enum PROMOTION_STRING {
+  QUEEN = "q",
+  ROOK = "r",
+  BISHOP = "b",
+  KNIGHT = "k",
+}
+
+export const getPromotionEnum = (str: string) => {
+  switch (str) {
+    case PROMOTION_STRING.QUEEN:
+      return PROMOTION_STRING.QUEEN;
+    case PROMOTION_STRING.ROOK:
+      return PROMOTION_STRING.ROOK;
+    case PROMOTION_STRING.BISHOP:
+      return PROMOTION_STRING.BISHOP;
+    case PROMOTION_STRING.KNIGHT:
+      return PROMOTION_STRING.KNIGHT;
+    default:
+      return null;
+  }
+};
+
 interface IPiece {
   show(): TSign;
   moved(): void;
   validate(axis: Taxis, isEnemy: boolean): boolean;
+  shouldPromotion(position: TPosition, maxRow: number): boolean;
+  promotion(pieceString: PROMOTION_STRING): Piece | null;
 }
 
 export class Piece implements IPiece {
@@ -20,7 +46,6 @@ export class Piece implements IPiece {
     this.color = color;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   validate(axis: Taxis, isEnemy: boolean) {
     if (axis.x === 0 && axis.y === 0) return false;
     return true;
@@ -30,5 +55,13 @@ export class Piece implements IPiece {
   }
   show() {
     return this.sign;
+  }
+
+  shouldPromotion(position: TPosition, maxRow: number): boolean {
+    return false;
+  }
+
+  promotion(pieceString: PROMOTION_STRING): Piece | null {
+    return null;
   }
 }
