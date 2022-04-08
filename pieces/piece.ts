@@ -31,17 +31,20 @@ export const getPromotionEnum = (str: string) => {
 };
 
 interface IPiece {
+  lastMovedTurn: number;
   show(): TSign;
   moved(): void;
   validate(axis: Taxis, isEnemy: boolean): boolean;
   shouldPromotion(position: TPosition, maxRow: number): boolean;
   promotion(pieceString: PROMOTION_STRING): Piece | null;
+  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number): boolean;
 }
 
 export class Piece implements IPiece {
   protected sign: TSign = null;
   protected isMoved = false;
   readonly color: PLAYER_COLOR;
+  lastMovedTurn = 0;
   constructor({ color }: TPiece) {
     this.color = color;
   }
@@ -50,11 +53,17 @@ export class Piece implements IPiece {
     if (axis.x === 0 && axis.y === 0) return false;
     return true;
   }
+
   moved() {
     this.isMoved = true;
   }
+
   show() {
     return this.sign;
+  }
+
+  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
+    return false;
   }
 
   shouldPromotion(position: TPosition, maxRow: number): boolean {

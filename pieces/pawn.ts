@@ -23,6 +23,20 @@ export class Pawn extends Piece {
     }
   }
 
+  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
+    if (Math.abs(axis.x) !== 1 || axis.y !== 1) return false;
+    const row: number = to.row + (turn === PLAYER_COLOR.WHITE ? 1 : -1);
+    if (row < 0 || cells.length - 1 < row) return false;
+    const piece = cells[row][to.col];
+    if (!piece || piece.color === turn) return false;
+    if (piece.lastMovedTurn !== currentTurn - 1) return false;
+
+    cells[to.row][to.col] = piece;
+    cells[row][to.col] = null;
+
+    return true;
+  }
+
   shouldPromotion(position: TPosition, maxRow: number) {
     switch (this.color) {
       case PLAYER_COLOR.WHITE:
