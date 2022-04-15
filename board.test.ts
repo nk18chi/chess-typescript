@@ -109,7 +109,7 @@ describe("Board", () => {
         const expeced = defaultBoardPosition;
 
         expeced[5][0] = expeced[6][0];
-        if (expeced[5][0]) expeced[5][0]["isMoved"] = true;
+        if (expeced[5][0]) expeced[5][0]["movedCount"] = 1;
         expeced[6][0] = null;
         expect(board["cells"]).toStrictEqual(expeced);
       });

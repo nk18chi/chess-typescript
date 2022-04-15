@@ -1,4 +1,4 @@
-import { Piece, PROMOTION_STRING, TPiece } from "./piece";
+import { Piece, PROMOTION_STRING, TPiece, TSpecialMove } from "./piece";
 import { PLAYER_COLOR } from "../playerColor";
 import { BLACK_SIGN, WHITE_SIGN } from "../sign";
 import { Taxis } from "../axis";
@@ -9,6 +9,7 @@ import { Knight } from "./knight";
 import { TPosition } from "../position";
 
 export class Pawn extends Piece {
+  private isTwoStepMoved = false;
   constructor(props: TPiece) {
     super(props);
     switch (this.color) {
@@ -23,6 +24,18 @@ export class Pawn extends Piece {
     }
   }
 
+  specialMove({ turn, axis, from, to, cells, currentTurn, promotion }: TSpecialMove) {
+    if (this.shouldPromotion(to, cells.length)) {
+      if (!promotion) throw new Error("the piece must promote");
+      const newPiece = this.promotion(promotion);
+      cells[from.row][from.col] = newPiece;
+      return true;
+    } else {
+      if (promotion) throw new Error("the piece cannot promote from the current place");
+    }
+    return this.enPassant(turn, axis, to, cells, currentTurn);
+  }
+
   enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
     if (Math.abs(axis.x) !== 1 || axis.y !== 1) return false;
     const row: number = to.row + (turn === PLAYER_COLOR.WHITE ? 1 : -1);
@@ -30,8 +43,7 @@ export class Pawn extends Piece {
     const piece = cells[row][to.col];
     if (!piece || piece.color === turn) return false;
     if (piece.lastMovedTurn !== currentTurn - 1) return false;
-
-    cells[to.row][to.col] = piece;
+    if (!(piece instanceof Pawn) || !piece.isTwoStepMoved) return false;
     cells[row][to.col] = null;
 
     return true;
@@ -70,8 +82,13 @@ export class Pawn extends Piece {
     if (!super.validate(axis, isEnemy)) return false;
     if (isEnemy && Math.abs(axis.x) === 1 && axis.y === 1) return true;
     if (isEnemy) return false;
-    if (!this.isMoved && axis.y === 2 && axis.x === 0) return true;
+    if (this.movedCount === 0 && axis.y === 2 && axis.x === 0) return true;
     if (axis.y === 1 && axis.x === 0) return true;
     return false;
+  }
+
+  moved(axis: Taxis) {
+    super.moved(axis);
+    if (axis.y === 2 && axis.x === 0) this.isTwoStepMoved = true;
   }
 }

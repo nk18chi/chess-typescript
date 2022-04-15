@@ -30,19 +30,27 @@ export const getPromotionEnum = (str: string) => {
   }
 };
 
+export type TSpecialMove = {
+  turn: PLAYER_COLOR;
+  axis: Taxis;
+  from: TPosition;
+  to: TPosition;
+  cells: (Piece | null)[][];
+  currentTurn: number;
+  promotion: PROMOTION_STRING | null | undefined;
+};
+
 interface IPiece {
   lastMovedTurn: number;
   show(): TSign;
-  moved(): void;
+  moved(axis: Taxis): void;
   validate(axis: Taxis, isEnemy: boolean): boolean;
-  shouldPromotion(position: TPosition, maxRow: number): boolean;
-  promotion(pieceString: PROMOTION_STRING): Piece | null;
-  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number): boolean;
+  specialMove(param: TSpecialMove): boolean;
 }
 
 export class Piece implements IPiece {
   protected sign: TSign = null;
-  protected isMoved = false;
+  protected movedCount = 0;
   readonly color: PLAYER_COLOR;
   lastMovedTurn = 0;
   constructor({ color }: TPiece) {
@@ -54,23 +62,16 @@ export class Piece implements IPiece {
     return true;
   }
 
-  moved() {
-    this.isMoved = true;
+  moved(axis: Taxis) {
+    this.movedCount += 1;
   }
 
   show() {
     return this.sign;
   }
 
-  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
+  specialMove(param: TSpecialMove) {
+    if (param.promotion) throw new Error("the piece is not allowed to promote");
     return false;
-  }
-
-  shouldPromotion(position: TPosition, maxRow: number): boolean {
-    return false;
-  }
-
-  promotion(pieceString: PROMOTION_STRING): Piece | null {
-    return null;
   }
 }

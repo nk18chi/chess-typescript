@@ -109,7 +109,7 @@ export class Board implements IBoard {
     if (to.col < 0 || this.mapSize <= to.col) throw new Error(errorOutOfBoard);
 
     const piece = this.cells[from.row][from.col];
-    let dest = this.cells[to.row][to.col];
+    const dest = this.cells[to.row][to.col];
     if (!piece) throw new Error("there is no piece that you are trying to move");
     if (piece.color !== turn) throw new Error("the piece that you are trying to move is not yours");
     if (dest?.color === turn) throw new Error("the piece that you are trying to capture is yours");
@@ -123,20 +123,14 @@ export class Board implements IBoard {
       axis.y *= -1;
     }
 
-    piece.enPassant(turn, axis, to, this.cells, this.currentTurn);
-    dest = this.cells[to.row][to.col];
-
-    if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
-    if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
-    if (piece.shouldPromotion(to, this.mapSize)) {
-      if (!promotion) throw new Error("the piece must promote");
-      const newPiece = piece.promotion(promotion);
-      if (!newPiece) throw new Error("the piece is not allowed to promote");
-      this.cells[from.row][from.col] = newPiece;
+    const isMoved = piece.specialMove({ turn, axis, from, to, cells: this.cells, currentTurn: this.currentTurn, promotion });
+    if (!isMoved) {
+      if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
+      if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
     }
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
-    piece.moved();
+    piece.moved(axis);
     piece.lastMovedTurn = this.currentTurn;
     this.currentTurn += 1;
     if (dest && KINGS.includes(dest.show())) {
