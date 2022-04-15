@@ -7,7 +7,7 @@
     "start": "nodemon --exec npx ts-node ./index.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest --maxWorkers=1",
-    "test:watch": "jest --watchAll --maxWorkers=1",
+    "test:watch": "jest --watchAll --maxWorkers=1 --verbose",
     "lint-staged": "lint-staged"
   },
   "repository": {

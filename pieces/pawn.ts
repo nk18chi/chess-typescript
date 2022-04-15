@@ -36,7 +36,7 @@ export class Pawn extends Piece {
     return this.enPassant(turn, axis, to, cells, currentTurn);
   }
 
-  enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
+  private enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
     if (Math.abs(axis.x) !== 1 || axis.y !== 1) return false;
     const row: number = to.row + (turn === PLAYER_COLOR.WHITE ? 1 : -1);
     if (row < 0 || cells.length - 1 < row) return false;
@@ -49,7 +49,7 @@ export class Pawn extends Piece {
     return true;
   }
 
-  shouldPromotion(position: TPosition, maxRow: number) {
+  private shouldPromotion(position: TPosition, maxRow: number) {
     switch (this.color) {
       case PLAYER_COLOR.WHITE:
         if (position.row !== 0) return false;
@@ -63,7 +63,7 @@ export class Pawn extends Piece {
     return true;
   }
 
-  promotion(pieceString: PROMOTION_STRING | null) {
+  private promotion(pieceString: PROMOTION_STRING | null) {
     switch (pieceString) {
       case PROMOTION_STRING.QUEEN:
         return new Queen({ color: this.color });
