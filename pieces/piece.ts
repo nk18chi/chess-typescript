@@ -43,14 +43,13 @@ export type TSpecialMove = {
 interface IPiece {
   lastMovedTurn: number;
   show(): TSign;
-  moved(axis: Taxis): void;
+  moved(axis: Taxis, currentTurn: number): void;
   validate(axis: Taxis, isEnemy: boolean): boolean;
   specialMove(param: TSpecialMove): boolean;
 }
 
 export class Piece implements IPiece {
   protected sign: TSign = null;
-  protected movedCount = 0;
   readonly color: PLAYER_COLOR;
   lastMovedTurn = 0;
   constructor({ color }: TPiece) {
@@ -62,8 +61,8 @@ export class Piece implements IPiece {
     return true;
   }
 
-  moved(axis: Taxis) {
-    this.movedCount += 1;
+  moved(axis: Taxis, currentTurn: number) {
+    this.lastMovedTurn = currentTurn;
   }
 
   show() {

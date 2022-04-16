@@ -12,44 +12,49 @@ const testcases = [
     axis: { x: 0, y: 2 },
     isEmeny: false,
     expected: true,
-    movedCount: 0,
+    currentTurn: 0,
   },
   {
     description: "success to move",
     axis: { x: 0, y: 1 },
     isEmeny: false,
     expected: true,
+    currentTurn: 1,
   },
   {
     description: "success to move",
     axis: { x: 1, y: 1 },
     isEmeny: true,
     expected: true,
+    currentTurn: 1,
   },
   {
     description: "fail to move",
     axis: { x: 0, y: 2 },
     isEmeny: true,
     expected: false,
+    currentTurn: 0,
   },
   {
     description: "fail to move",
     axis: { x: 0, y: 2 },
     isEmeny: false,
     expected: false,
-    movedCount: 1,
+    currentTurn: 1,
   },
   {
     description: "fail to move",
     axis: { x: 0, y: 1 },
     isEmeny: true,
     expected: false,
+    currentTurn: 0,
   },
   {
     description: "fail to move",
     axis: { x: 1, y: 1 },
     isEmeny: false,
     expected: false,
+    currentTurn: 0,
   },
 ];
 
@@ -74,7 +79,7 @@ describe("Pawn", () => {
     testcases.forEach((testcase) => {
       it(`${testcase.description} ${JSON.stringify(testcase.axis)}`, async () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
-        if (testcase.movedCount) piece.moved(testcase.axis);
+        piece.moved(testcase.axis, testcase.currentTurn);
         expect(piece.validate(testcase.axis, testcase.isEmeny)).toBe(testcase.expected);
       });
     });
@@ -125,7 +130,6 @@ describe("Pawn", () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
         const opponent = new Pawn({ color: PLAYER_COLOR.BLACK });
         opponent.lastMovedTurn = promotionParams.currentTurn - 1;
-        opponent["movedCount"] = 1;
         opponent["isTwoStepMoved"] = true;
         const cells = defaultCells;
         cells[3][0] = piece;
@@ -161,7 +165,6 @@ describe("Pawn", () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
         const opponent = new Pawn({ color: PLAYER_COLOR.BLACK });
         opponent.lastMovedTurn = promotionParams.currentTurn - 1;
-        opponent["movedCount"] = 1;
         const cells = defaultCells;
         cells[3][0] = piece;
         cells[3][1] = opponent;

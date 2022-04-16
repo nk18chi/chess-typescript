@@ -11,9 +11,9 @@ describe("Piece", () => {
   describe("moved", () => {
     it(`should change the value of moved after moving a piece`, async () => {
       const piece = new Piece({ color: PLAYER_COLOR.WHITE });
-      expect(piece["movedCount"]).toBe(0);
-      piece.moved({ x: 0, y: 0 });
-      expect(piece["movedCount"]).toBe(1);
+      expect(piece.lastMovedTurn).toBe(0);
+      piece.moved({ x: 0, y: 0 }, 1);
+      expect(piece.lastMovedTurn).toBe(1);
     });
   });
   describe("validate", () => {

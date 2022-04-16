@@ -82,13 +82,13 @@ export class Pawn extends Piece {
     if (!super.validate(axis, isEnemy)) return false;
     if (isEnemy && Math.abs(axis.x) === 1 && axis.y === 1) return true;
     if (isEnemy) return false;
-    if (this.movedCount === 0 && axis.y === 2 && axis.x === 0) return true;
+    if (this.lastMovedTurn === 0 && axis.y === 2 && axis.x === 0) return true;
     if (axis.y === 1 && axis.x === 0) return true;
     return false;
   }
 
-  moved(axis: Taxis) {
-    super.moved(axis);
+  moved(axis: Taxis, currentTurn: number) {
+    super.moved(axis, currentTurn);
     if (axis.y === 2 && axis.x === 0) this.isTwoStepMoved = true;
   }
 }

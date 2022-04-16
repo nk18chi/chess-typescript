@@ -115,11 +115,12 @@ export class Board implements IBoard {
     if (dest?.color === turn) throw new Error("the piece that you are trying to capture is yours");
 
     const axis: Taxis = {
-      x: from.col - to.col,
-      y: from.row - to.row,
+      x: to.col - from.col,
+      y: to.row - from.row,
     };
     if (turn === PLAYER_COLOR.BLACK) {
       axis.x *= -1;
+    } else {
       axis.y *= -1;
     }
 
@@ -130,9 +131,8 @@ export class Board implements IBoard {
     }
 
     [this.cells[from.row][from.col], this.cells[to.row][to.col]] = [null, this.cells[from.row][from.col]];
-    piece.moved(axis);
-    piece.lastMovedTurn = this.currentTurn;
     this.currentTurn += 1;
+    piece.moved(axis, this.currentTurn);
     if (dest && KINGS.includes(dest.show())) {
       this.aliveKingsMap[dest.color] = false;
     }
