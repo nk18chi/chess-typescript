@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install npm dependencies
-          command: npm install -g
+          command: npm install
       - run:
           name: Run Unit Tests
           command: npm run test
