@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   run_tests:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:16.7.0
     steps:
       - checkout
       - run:
