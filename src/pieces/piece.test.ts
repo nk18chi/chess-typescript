@@ -1,4 +1,4 @@
-import { PLAYER_COLOR } from "../playerColor";
+import { PLAYER_COLOR } from "../types/playerColor";
 import { Piece } from "./piece";
 
 describe("Piece", () => {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec npx ts-node ./index.ts",
+    "start": "nodemon --exec npx ts-node ./src/index.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest --maxWorkers=1",
     "test:watch": "jest --watchAll --maxWorkers=1 --verbose",

@@ -1,4 +1,4 @@
-import { PLAYER_COLOR } from "../playerColor";
+import { PLAYER_COLOR } from "../types/playerColor";
 import { Rook } from "./rook";
 
 const testcases = [

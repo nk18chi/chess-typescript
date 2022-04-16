@@ -1,9 +1,10 @@
-import { Piece, TPiece, TSpecialMove } from "./piece";
-import { PLAYER_COLOR } from "../playerColor";
-import { BLACK_SIGN, WHITE_SIGN } from "../sign";
-import { Taxis } from "../axis";
-import { TPosition } from "../position";
+import { Piece } from "./piece";
+import { PLAYER_COLOR } from "../types/playerColor";
+import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
+import { Taxis } from "../types/axis";
+import { TPosition } from "../types/position";
 import { Rook } from "./rook";
+import { TPiece, TSpecialMove } from "../types/piece";
 
 export class King extends Piece {
   constructor(props: TPiece) {

@@ -1,19 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Taxis } from "../axis";
-import { PLAYER_COLOR } from "../playerColor";
-import { TPosition } from "../position";
-import { TSign } from "../sign";
-
-export type TPiece = {
-  color: PLAYER_COLOR;
-};
-
-export enum PROMOTION_STRING {
-  QUEEN = "q",
-  ROOK = "r",
-  BISHOP = "b",
-  KNIGHT = "k",
-}
+import { Taxis } from "../types/axis";
+import { PROMOTION_STRING, TPiece, TSpecialMove } from "../types/piece";
+import { PLAYER_COLOR } from "../types/playerColor";
+import { TSign } from "../types/sign";
 
 export const getPromotionEnum = (str: string) => {
   switch (str) {
@@ -28,16 +17,6 @@ export const getPromotionEnum = (str: string) => {
     default:
       return null;
   }
-};
-
-export type TSpecialMove = {
-  turn: PLAYER_COLOR;
-  axis: Taxis;
-  from: TPosition;
-  to: TPosition;
-  cells: (Piece | null)[][];
-  currentTurn: number;
-  promotion: PROMOTION_STRING | null | undefined;
 };
 
 interface IPiece {

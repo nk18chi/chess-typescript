@@ -1,7 +1,7 @@
 import { Game } from "./game";
 import { Board } from "./board";
 import { Input } from "./input";
-import { PLAYER_COLOR } from "./playerColor";
+import { PLAYER_COLOR } from "./types/playerColor";
 import * as inputOriginal from "./input";
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

@@ -1,12 +1,13 @@
-import { Piece, PROMOTION_STRING, TPiece, TSpecialMove } from "./piece";
-import { PLAYER_COLOR } from "../playerColor";
-import { BLACK_SIGN, WHITE_SIGN } from "../sign";
-import { Taxis } from "../axis";
+import { Piece } from "./piece";
+import { PLAYER_COLOR } from "../types/playerColor";
+import { Taxis } from "../types/axis";
 import { Queen } from "./queen";
 import { Rook } from "./rook";
 import { Bishop } from "./bishop";
 import { Knight } from "./knight";
-import { TPosition } from "../position";
+import { TPosition } from "../types/position";
+import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
+import { PROMOTION_STRING, TPiece, TSpecialMove } from "../types/piece";
 
 export class Pawn extends Piece {
   private isTwoStepMoved = false;

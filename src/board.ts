@@ -2,13 +2,14 @@ import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
 import { Pawn } from "./pieces/pawn";
-import { Piece, PROMOTION_STRING } from "./pieces/piece";
-import { PLAYER_COLOR } from "./playerColor";
+import { Piece } from "./pieces/piece";
+import { PLAYER_COLOR } from "./types/playerColor";
 import { Queen } from "./pieces/queen";
 import { Rook } from "./pieces/rook";
-import { KINGS } from "./sign";
-import { Taxis } from "./axis";
-import { TPosition } from "./position";
+import { KINGS } from "./types/sign";
+import { Taxis } from "./types/axis";
+import { TPosition } from "./types/position";
+import { PROMOTION_STRING } from "./types/piece";
 
 interface IBoard {
   initialize(): void;

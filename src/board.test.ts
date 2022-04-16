@@ -5,7 +5,7 @@ import { Knight } from "./pieces/knight";
 import { Pawn } from "./pieces/pawn";
 import { Queen } from "./pieces/queen";
 import { Rook } from "./pieces/rook";
-import { PLAYER_COLOR } from "./playerColor";
+import { PLAYER_COLOR } from "./types/playerColor";
 
 const defaultBoardPosition = [
   [

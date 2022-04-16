@@ -1,8 +1,8 @@
-import { PLAYER_COLOR } from "../playerColor";
+import { PLAYER_COLOR } from "../types/playerColor";
 import { Bishop } from "./bishop";
 import { Knight } from "./knight";
 import { Pawn } from "./pawn";
-import { PROMOTION_STRING } from "./piece";
+import { PROMOTION_STRING } from "../types/piece";
 import { Queen } from "./queen";
 import { Rook } from "./rook";
 

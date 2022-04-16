@@ -1,7 +1,7 @@
 import { Board } from "./board";
 import { Input } from "./input";
-import { getPromotionEnum, PROMOTION_STRING } from "./pieces/piece";
-import { PLAYER_COLOR } from "./playerColor";
+import { getPromotionEnum } from "./pieces/piece";
+import { PLAYER_COLOR } from "./types/playerColor";
 
 interface IGame {
   start(): void;

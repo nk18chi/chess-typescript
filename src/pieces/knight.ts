@@ -1,7 +1,8 @@
-import { Piece, TPiece } from "./piece";
-import { PLAYER_COLOR } from "../playerColor";
-import { BLACK_SIGN, WHITE_SIGN } from "../sign";
-import { Taxis } from "../axis";
+import { Piece } from "./piece";
+import { PLAYER_COLOR } from "../types/playerColor";
+import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
+import { Taxis } from "../types/axis";
+import { TPiece } from "../types/piece";
 
 export class Knight extends Piece {
   constructor(props: TPiece) {
