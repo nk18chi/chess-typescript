@@ -44,7 +44,8 @@ export class King extends Piece {
       if (startCol !== 4) {
         const piece = cells[from.row][startCol];
         if (piece) return false;
-        // TODO: check if the areas does not get checkMated
+        // TODO: check if the king get attacked
+        // TODO: check if the areas get attacked
       }
       startCol += axis.x > 0 ? 1 : -1;
     }
