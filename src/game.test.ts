@@ -112,6 +112,23 @@ describe("Game", () => {
       expect(console.log).toHaveBeenCalledWith("WHITE: 0");
       expect(console.log).toHaveBeenCalledWith("BLACK: 1");
     });
+    it("command 'moves'", async () => {
+      console.log = jest.fn();
+      const game = new Game();
+      const spyIsKing = jest.spyOn(game["board"], "isKing");
+      spyIsKing.mockImplementation(() => {
+        return true;
+      });
+      const spyShowAllPossibleMoves = jest.spyOn(game["board"], "showAllPossibleMoves");
+
+      game.start();
+      for (const cmd of ["moves"]) {
+        game.input.answer(cmd);
+        await delay(1000);
+      }
+
+      expect(spyShowAllPossibleMoves).toBeCalledTimes(1);
+    });
     describe("command moving a pirce", () => {
       it("should correctly move a piece in turns", async () => {
         console.log = jest.fn();
@@ -151,6 +168,25 @@ describe("Game", () => {
         expect(spyUpdate).toBeCalledTimes(2);
         expect(spyShow).toBeCalledTimes(3);
       });
+    });
+    it("command showing possible moves of the selected piece", async () => {
+      console.log = jest.fn();
+      const game = new Game();
+      const spyIsKing = jest.spyOn(game["board"], "isKing");
+      spyIsKing.mockImplementation(() => {
+        return true;
+      });
+      const spyParsePosition = jest.spyOn(game["board"], "parsePosition");
+      const spyShowPossibleMoves = jest.spyOn(game["board"], "showPossibleMoves");
+
+      game.start();
+      for (const cmd of ["a7"]) {
+        game.input.answer(cmd);
+        await delay(1000);
+      }
+
+      expect(spyParsePosition).toBeCalledTimes(1);
+      expect(spyShowPossibleMoves).toBeCalledTimes(1);
     });
   });
 

@@ -188,5 +188,35 @@ describe("Board", () => {
         expect(board.isKing(PLAYER_COLOR.BLACK)).toBe(false);
       });
     });
+    describe("showPossibleMoves", () => {
+      it("should show possible moves", () => {
+        console.log = jest.fn();
+        board.initialize();
+        board.showPossibleMoves({ row: 1, col: 0 });
+        expect(console.log).toHaveBeenCalledWith(`♟(a7):`, "a6, a5");
+      });
+      it("should throw an error if there is no piece in the selected ares", () => {
+        console.log = jest.fn();
+        board.initialize();
+        expect(() => board.showPossibleMoves({ row: 2, col: 0 })).toThrow("Please select a piece to show all possible moves for it");
+      });
+    });
+    describe("showAllPossibleMoves", () => {
+      it("should show all possible moves", () => {
+        console.log = jest.fn();
+        board.initialize();
+        board.showAllPossibleMoves(PLAYER_COLOR.WHITE);
+        expect(console.log).toHaveBeenCalledWith("♙(a2):", "a3, a4");
+        expect(console.log).toHaveBeenCalledWith("♙(b2):", "b3, b4");
+        expect(console.log).toHaveBeenCalledWith("♙(c2):", "c3, c4");
+        expect(console.log).toHaveBeenCalledWith("♙(d2):", "d3, d4");
+        expect(console.log).toHaveBeenCalledWith("♙(e2):", "e3, e4");
+        expect(console.log).toHaveBeenCalledWith("♙(f2):", "f3, f4");
+        expect(console.log).toHaveBeenCalledWith("♙(g2):", "g3, g4");
+        expect(console.log).toHaveBeenCalledWith("♙(h2):", "h3, h4");
+        expect(console.log).toHaveBeenCalledWith("♘(b1):", "a3, c3");
+        expect(console.log).toHaveBeenCalledWith("♘(g1):", "f3, h3");
+      });
+    });
   });
 });

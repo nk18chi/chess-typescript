@@ -17,6 +17,8 @@ interface IBoard {
   parsePosition(position: string): TPosition;
   update(turn: PLAYER_COLOR, from: TPosition, to: TPosition, promotion: PROMOTION_STRING | null): void;
   isKing(color: PLAYER_COLOR): boolean;
+  showPossibleMoves(position: TPosition): void;
+  showAllPossibleMoves(color: PLAYER_COLOR): void;
 }
 
 export class Board implements IBoard {
@@ -68,6 +70,7 @@ export class Board implements IBoard {
       this.cells[6][i] = new Pawn({ color: PLAYER_COLOR.WHITE });
     }
   }
+
   show() {
     console.log("");
     let i: number = this.mapSize;
@@ -141,6 +144,38 @@ export class Board implements IBoard {
 
   isKing(color: PLAYER_COLOR) {
     return this.aliveKingsMap[color];
+  }
+
+  showPossibleMoves(position: TPosition) {
+    const piece = this.cells[position.row][position.col];
+    if (!piece) throw new Error("Please select a piece to show all possible moves for it");
+    console.log(
+      `${piece.show()}(${this.toPositionString(position)}):`,
+      piece
+        .listMoves({ curPosition: position, cells: this.cells })
+        .map((move) => this.toPositionString(move))
+        .join(", ")
+    );
+  }
+
+  showAllPossibleMoves(color: PLAYER_COLOR) {
+    this.cells.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (!cell || cell.color !== color) return;
+        const position: TPosition = {
+          row: i,
+          col: j,
+        };
+        const moves = cell.listMoves({ curPosition: position, cells: this.cells });
+        if (moves.length > 0) {
+          console.log(`${cell.show()}(${this.toPositionString(position)}):`, moves.map((move) => this.toPositionString(move)).join(", "));
+        }
+      });
+    });
+  }
+
+  private toPositionString(position: TPosition) {
+    return String.fromCharCode(position.col + 97) + String((position.row - this.mapSize) * -1);
   }
 
   private isPieceOnWay(from: TPosition, to: TPosition): boolean {

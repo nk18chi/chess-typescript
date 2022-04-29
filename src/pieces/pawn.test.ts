@@ -2,9 +2,10 @@ import { PLAYER_COLOR } from "../types/playerColor";
 import { Bishop } from "./bishop";
 import { Knight } from "./knight";
 import { Pawn } from "./pawn";
-import { PROMOTION_STRING } from "../types/piece";
+import { PROMOTION_STRING, sortPositionFunc } from "../types/piece";
 import { Queen } from "./queen";
 import { Rook } from "./rook";
+import { Piece } from "./piece";
 
 const testcases = [
   {
@@ -75,6 +76,19 @@ const promotionParams = {
 };
 
 describe("Pawn", () => {
+  let cells: (Piece | null)[][] = [[]];
+  beforeEach(() => {
+    cells = [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+    ];
+  });
   describe("validate method", () => {
     testcases.forEach((testcase) => {
       it(`${testcase.description} ${JSON.stringify(testcase.axis)}`, async () => {
@@ -178,6 +192,59 @@ describe("Pawn", () => {
         expect(piece.specialMove(params)).toBe(false);
         expect(cells[3][1]).toBe(opponent);
       });
+    });
+  });
+  describe("listMoves method", () => {
+    it(`should return proper moves if there is no enemies`, async () => {
+      const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
+      const curPosition = { row: 4, col: 4 };
+      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+        [
+          {
+            row: curPosition.row + 1,
+            col: curPosition.col,
+          },
+          {
+            row: curPosition.row + 2,
+            col: curPosition.col,
+          },
+        ].sort(sortPositionFunc)
+      );
+    });
+    it(`should return proper moves if enemies exists`, async () => {
+      const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
+      const curPosition = { row: 4, col: 4 };
+      cells[5][3] = new Pawn({ color: PLAYER_COLOR.BLACK });
+      cells[5][5] = new Pawn({ color: PLAYER_COLOR.WHITE });
+      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+        [
+          {
+            row: curPosition.row + 1,
+            col: curPosition.col + 1,
+          },
+          {
+            row: curPosition.row + 1,
+            col: curPosition.col,
+          },
+          {
+            row: curPosition.row + 2,
+            col: curPosition.col,
+          },
+        ].sort(sortPositionFunc)
+      );
+    });
+    it(`should return proper moves if pawn has already moved`, async () => {
+      const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
+      piece.moved({ x: 0, y: 2 }, 1);
+      const curPosition = { row: 4, col: 4 };
+      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+        [
+          {
+            row: curPosition.row + 1,
+            col: curPosition.col,
+          },
+        ].sort(sortPositionFunc)
+      );
     });
   });
 });

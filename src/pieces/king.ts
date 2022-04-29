@@ -4,7 +4,7 @@ import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
 import { Taxis } from "../types/axis";
 import { TPosition } from "../types/position";
 import { Rook } from "./rook";
-import { TPiece, TSpecialMove } from "../types/piece";
+import { TListMoves, TMove, TPiece, TSpecialMove } from "../types/piece";
 
 export class King extends Piece {
   constructor(props: TPiece) {
@@ -30,6 +30,20 @@ export class King extends Piece {
 
   specialMove({ turn, axis, from, to, cells }: TSpecialMove) {
     return this.castling(turn, axis, from, to, cells);
+  }
+
+  listMoves({ cells, curPosition }: TListMoves): TPosition[] {
+    const moves: TMove[] = [
+      { row: 1, col: 0 },
+      { row: 1, col: 1 },
+      { row: 0, col: 1 },
+      { row: -1, col: 1 },
+      { row: -1, col: 0 },
+      { row: -1, col: -1 },
+      { row: 0, col: -1 },
+      { row: 1, col: -1 },
+    ];
+    return super.listMoves({ curPosition, cells, moves });
   }
 
   private castling(turn: PLAYER_COLOR, axis: Taxis, from: TPosition, to: TPosition, cells: (Piece | null)[][]) {

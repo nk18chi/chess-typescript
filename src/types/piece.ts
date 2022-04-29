@@ -23,3 +23,22 @@ export type TSpecialMove = {
   currentTurn: number;
   promotion: PROMOTION_STRING | null | undefined;
 };
+
+export type TListMoves = {
+  curPosition: TPosition;
+  cells: (Piece | null)[][];
+  moves?: TMove[];
+  filterFunc?: (move: TMove) => boolean;
+};
+
+export type TMove = {
+  row: number;
+  col: number;
+  isEnemy?: boolean;
+  isTwoStepMoved?: boolean;
+  isRepeat?: boolean;
+};
+
+export const sortPositionFunc = (a: TPosition, b: TPosition) => {
+  return a.row - b.row || a.col - b.col;
+};

@@ -80,7 +80,7 @@ export class Game implements IGame {
       console.log(`${PLAYER_COLOR[this.turn]} to move`);
       const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
       const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)([q,r,b,k]{0,1})$/);
-      // const square = answer.match(/^([a-z]+[0-9]+)$/);
+      const square = answer.match(/^([a-z]+[0-9]+)$/);
       switch (answer) {
         case COMMAND.HELP:
           console.log("* type 'help' for help");
@@ -99,7 +99,7 @@ export class Game implements IGame {
           isPlayerActionDone = true;
           break;
         case COMMAND.MOVES:
-          isPlayerActionDone = true;
+          this.board.showAllPossibleMoves(this.turn);
           break;
         default:
           if (moveTo) {
@@ -115,6 +115,9 @@ export class Game implements IGame {
                 console.error(e.message);
               }
             }
+          } else if (square) {
+            const cur = this.board.parsePosition(square[1]);
+            this.board.showPossibleMoves(cur);
           }
       }
     }

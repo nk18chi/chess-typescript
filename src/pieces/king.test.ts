@@ -1,3 +1,4 @@
+import { sortPositionFunc } from "../types/piece";
 import { PLAYER_COLOR } from "../types/playerColor";
 import { King } from "./king";
 
@@ -89,6 +90,17 @@ const testcases = [
   },
 ];
 
+const cells = [
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, new King({ color: PLAYER_COLOR.BLACK }), new King({ color: PLAYER_COLOR.WHITE }), null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+];
+
 describe("King", () => {
   describe("validate method", () => {
     testcases.forEach((testcase) => {
@@ -96,6 +108,23 @@ describe("King", () => {
         const piece = new King({ color: PLAYER_COLOR.WHITE });
         expect(piece.validate(testcase.axis, false)).toBe(testcase.expected);
       });
+    });
+  });
+  describe("listMoves method", () => {
+    it(`should return proper moves`, async () => {
+      const piece = new King({ color: PLAYER_COLOR.WHITE });
+      expect(piece.listMoves({ curPosition: { row: 4, col: 4 }, cells }).sort(sortPositionFunc)).toStrictEqual(
+        [
+          { row: 3, col: 4 },
+          // { row: 3, col: 5 },
+          { row: 4, col: 5 },
+          { row: 5, col: 5 },
+          { row: 5, col: 4 },
+          { row: 5, col: 3 },
+          { row: 4, col: 3 },
+          { row: 3, col: 3 },
+        ].sort(sortPositionFunc)
+      );
     });
   });
 });

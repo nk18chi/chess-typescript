@@ -7,7 +7,7 @@ import { Bishop } from "./bishop";
 import { Knight } from "./knight";
 import { TPosition } from "../types/position";
 import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
-import { PROMOTION_STRING, TPiece, TSpecialMove } from "../types/piece";
+import { PROMOTION_STRING, TListMoves, TMove, TPiece, TSpecialMove } from "../types/piece";
 
 export class Pawn extends Piece {
   private isTwoStepMoved = false;
@@ -91,5 +91,24 @@ export class Pawn extends Piece {
   moved(axis: Taxis, currentTurn: number) {
     super.moved(axis, currentTurn);
     if (axis.y === 2 && axis.x === 0) this.isTwoStepMoved = true;
+  }
+
+  listMoves({ cells, curPosition }: TListMoves): TPosition[] {
+    const moves: TMove[] = [
+      { row: 1, col: -1, isEnemy: true },
+      { row: 1, col: 1, isEnemy: true },
+      { row: 1, col: 0 },
+      { row: 2, col: 0, isTwoStepMoved: true },
+    ];
+    const filterFunc = (move: TMove) => {
+      const piece = cells[move.row][move.col];
+      if (move.isEnemy) {
+        if (!piece) return false;
+        if (piece.color === this.color) return false;
+      } else if (piece) return false;
+      else if (move.isTwoStepMoved && this.lastMovedTurn > 0) return false;
+      return true;
+    };
+    return super.listMoves({ curPosition, cells, moves, filterFunc });
   }
 }
