@@ -99,7 +99,15 @@ export class Game implements IGame {
           isPlayerActionDone = true;
           break;
         case COMMAND.MOVES:
-          this.board.showAllPossibleMoves(this.turn);
+          this.board.showAllPossibleMoves(this.turn).forEach((move) => {
+            const { position, possibleMoves } = move;
+            const piece = this.board.cells[position.row][position.col];
+            if (!piece) return;
+            console.log(
+              `${piece.show()}(${this.board.toPositionString(position)}):`,
+              possibleMoves.map((possibleMove) => this.board.toPositionString(possibleMove)).join(", ")
+            );
+          });
           break;
         default:
           if (moveTo) {
@@ -117,7 +125,12 @@ export class Game implements IGame {
             }
           } else if (square) {
             const cur = this.board.parsePosition(square[1]);
-            this.board.showPossibleMoves(cur);
+            console.log(
+              this.board
+                .showPossibleMoves(cur)
+                .map((move) => this.board.toPositionString(move))
+                .join(", ")
+            );
           }
       }
     }

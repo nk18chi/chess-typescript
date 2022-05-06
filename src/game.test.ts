@@ -120,6 +120,9 @@ describe("Game", () => {
         return true;
       });
       const spyShowAllPossibleMoves = jest.spyOn(game["board"], "showAllPossibleMoves");
+      spyShowAllPossibleMoves.mockImplementation(() => {
+        return [];
+      });
 
       game.start();
       for (const cmd of ["moves"]) {
@@ -129,7 +132,7 @@ describe("Game", () => {
 
       expect(spyShowAllPossibleMoves).toBeCalledTimes(1);
     });
-    describe("command moving a pirce", () => {
+    describe("command moving a piece", () => {
       it("should correctly move a piece in turns", async () => {
         console.log = jest.fn();
         const game = new Game();
@@ -178,6 +181,13 @@ describe("Game", () => {
       });
       const spyParsePosition = jest.spyOn(game["board"], "parsePosition");
       const spyShowPossibleMoves = jest.spyOn(game["board"], "showPossibleMoves");
+      spyShowPossibleMoves.mockImplementation(() => {
+        return [
+          { row: 0, col: 0 },
+          { row: 1, col: 0 },
+        ];
+      });
+      const spyToPositionString = jest.spyOn(game["board"], "toPositionString");
 
       game.start();
       for (const cmd of ["a7"]) {
@@ -187,6 +197,7 @@ describe("Game", () => {
 
       expect(spyParsePosition).toBeCalledTimes(1);
       expect(spyShowPossibleMoves).toBeCalledTimes(1);
+      expect(spyToPositionString).toBeCalledTimes(2);
     });
   });
 

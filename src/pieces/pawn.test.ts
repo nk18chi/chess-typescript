@@ -6,6 +6,7 @@ import { PROMOTION_STRING, sortPositionFunc } from "../types/piece";
 import { Queen } from "./queen";
 import { Rook } from "./rook";
 import { Piece } from "./piece";
+import { Board } from "../board";
 
 const testcases = [
   {
@@ -59,7 +60,6 @@ const testcases = [
   },
 ];
 
-const defaultCells = Array.from(Array(8), () => new Array(8).fill(null));
 const pieceTestCases = [
   { name: "Queen", class: Queen, promotionString: PROMOTION_STRING.QUEEN },
   { name: "Rook", class: Rook, promotionString: PROMOTION_STRING.ROOK },
@@ -75,19 +75,11 @@ const promotionParams = {
   promotion: null,
 };
 
+const mapSize = 8;
 describe("Pawn", () => {
-  let cells: (Piece | null)[][] = [[]];
+  const board = new Board(mapSize);
   beforeEach(() => {
-    cells = [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-    ];
+    board.cells = Array.from(Array(mapSize), () => new Array(mapSize).fill(null));
   });
   describe("validate method", () => {
     testcases.forEach((testcase) => {
@@ -103,38 +95,35 @@ describe("Pawn", () => {
       pieceTestCases.forEach((testcase) => {
         it(`promote to a ${testcase.name}`, async () => {
           const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
-          const cells = defaultCells;
-          cells[1][0] = piece;
+          board.cells[1][0] = piece;
           const params = {
             ...promotionParams,
             promotion: testcase.promotionString,
-            cells: cells,
+            board,
           };
           expect(piece.specialMove(params)).toBe(true);
-          expect(cells[1][0]).toStrictEqual(new testcase.class({ color: PLAYER_COLOR.WHITE }));
+          expect(board.cells[1][0]).toStrictEqual(new testcase.class({ color: PLAYER_COLOR.WHITE }));
         });
       });
       it(`fail to promote if a promotion string is not set`, async () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
-        const cells = defaultCells;
-        cells[1][0] = piece;
+        board.cells[1][0] = piece;
         const params = {
           ...promotionParams,
           promotion: null,
-          cells: cells,
+          board,
         };
         expect(() => piece.specialMove(params)).toThrow("the piece must promote");
       });
       it(`fail to promote if a pawn is located in the wrong place to promote`, async () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
-        const cells = defaultCells;
-        cells[2][0] = piece;
+        board.cells[2][0] = piece;
         const params = {
           ...promotionParams,
           promotion: PROMOTION_STRING.QUEEN,
           from: { row: 2, col: 0 },
           to: { row: 1, col: 0 },
-          cells: cells,
+          board,
         };
         expect(() => piece.specialMove(params)).toThrow("the piece cannot promote from the current place");
       });
@@ -145,52 +134,50 @@ describe("Pawn", () => {
         const opponent = new Pawn({ color: PLAYER_COLOR.BLACK });
         opponent.lastMovedTurn = promotionParams.currentTurn - 1;
         opponent["isTwoStepMoved"] = true;
-        const cells = defaultCells;
-        cells[3][0] = piece;
-        cells[3][1] = opponent;
+        board.currentTurn = promotionParams.currentTurn;
+        board.cells[3][0] = piece;
+        board.cells[3][1] = opponent;
         const params = {
           ...promotionParams,
           axis: { x: 1, y: 1 },
           from: { row: 3, col: 0 },
           to: { row: 2, col: 1 },
-          cells: cells,
+          board,
         };
         expect(piece.specialMove(params)).toBe(true);
-        expect(cells[3][1]).toBe(null);
+        expect(board.cells[3][1]).toBe(null);
       });
       it(`fail to enPassant if the lastMovedTurn of the taken pawn is not one right ahead the current turn`, async () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
         const opponent = new Pawn({ color: PLAYER_COLOR.BLACK });
         opponent.lastMovedTurn = promotionParams.currentTurn - 2;
-        const cells = defaultCells;
-        cells[3][0] = piece;
-        cells[3][1] = opponent;
+        board.cells[3][0] = piece;
+        board.cells[3][1] = opponent;
         const params = {
           ...promotionParams,
           axis: { x: 1, y: 1 },
           from: { row: 3, col: 0 },
           to: { row: 2, col: 1 },
-          cells: cells,
+          board,
         };
         expect(piece.specialMove(params)).toBe(false);
-        expect(cells[3][1]).toBe(opponent);
+        expect(board.cells[3][1]).toBe(opponent);
       });
       it(`fail to enPassant if the taken pawn has not moved two steps as an initial move `, async () => {
         const piece = new Pawn({ color: PLAYER_COLOR.WHITE });
         const opponent = new Pawn({ color: PLAYER_COLOR.BLACK });
         opponent.lastMovedTurn = promotionParams.currentTurn - 1;
-        const cells = defaultCells;
-        cells[3][0] = piece;
-        cells[3][1] = opponent;
+        board.cells[3][0] = piece;
+        board.cells[3][1] = opponent;
         const params = {
           ...promotionParams,
           axis: { x: 1, y: 1 },
           from: { row: 3, col: 0 },
           to: { row: 2, col: 1 },
-          cells: cells,
+          board,
         };
         expect(piece.specialMove(params)).toBe(false);
-        expect(cells[3][1]).toBe(opponent);
+        expect(board.cells[3][1]).toBe(opponent);
       });
     });
   });
@@ -198,7 +185,7 @@ describe("Pawn", () => {
     it(`should return proper moves if there is no enemies`, async () => {
       const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
       const curPosition = { row: 4, col: 4 };
-      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+      expect(piece.listMoves({ curPosition, cells: board.cells }).sort(sortPositionFunc)).toStrictEqual(
         [
           {
             row: curPosition.row + 1,
@@ -214,9 +201,9 @@ describe("Pawn", () => {
     it(`should return proper moves if enemies exists`, async () => {
       const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
       const curPosition = { row: 4, col: 4 };
-      cells[5][3] = new Pawn({ color: PLAYER_COLOR.BLACK });
-      cells[5][5] = new Pawn({ color: PLAYER_COLOR.WHITE });
-      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+      board.cells[5][3] = new Pawn({ color: PLAYER_COLOR.BLACK });
+      board.cells[5][5] = new Pawn({ color: PLAYER_COLOR.WHITE });
+      expect(piece.listMoves({ curPosition, cells: board.cells }).sort(sortPositionFunc)).toStrictEqual(
         [
           {
             row: curPosition.row + 1,
@@ -237,7 +224,7 @@ describe("Pawn", () => {
       const piece = new Pawn({ color: PLAYER_COLOR.BLACK });
       piece.moved({ x: 0, y: 2 }, 1);
       const curPosition = { row: 4, col: 4 };
-      expect(piece.listMoves({ curPosition, cells }).sort(sortPositionFunc)).toStrictEqual(
+      expect(piece.listMoves({ curPosition, cells: board.cells }).sort(sortPositionFunc)).toStrictEqual(
         [
           {
             row: curPosition.row + 1,

@@ -190,10 +190,11 @@ describe("Board", () => {
     });
     describe("showPossibleMoves", () => {
       it("should show possible moves", () => {
-        console.log = jest.fn();
         board.initialize();
-        board.showPossibleMoves({ row: 1, col: 0 });
-        expect(console.log).toHaveBeenCalledWith(`♟(a7):`, "a6, a5");
+        expect(board.showPossibleMoves({ row: 1, col: 0 })).toStrictEqual([
+          { row: 2, col: 0 },
+          { row: 3, col: 0 },
+        ]);
       });
       it("should throw an error if there is no piece in the selected ares", () => {
         console.log = jest.fn();
@@ -203,19 +204,85 @@ describe("Board", () => {
     });
     describe("showAllPossibleMoves", () => {
       it("should show all possible moves", () => {
-        console.log = jest.fn();
         board.initialize();
-        board.showAllPossibleMoves(PLAYER_COLOR.WHITE);
-        expect(console.log).toHaveBeenCalledWith("♙(a2):", "a3, a4");
-        expect(console.log).toHaveBeenCalledWith("♙(b2):", "b3, b4");
-        expect(console.log).toHaveBeenCalledWith("♙(c2):", "c3, c4");
-        expect(console.log).toHaveBeenCalledWith("♙(d2):", "d3, d4");
-        expect(console.log).toHaveBeenCalledWith("♙(e2):", "e3, e4");
-        expect(console.log).toHaveBeenCalledWith("♙(f2):", "f3, f4");
-        expect(console.log).toHaveBeenCalledWith("♙(g2):", "g3, g4");
-        expect(console.log).toHaveBeenCalledWith("♙(h2):", "h3, h4");
-        expect(console.log).toHaveBeenCalledWith("♘(b1):", "a3, c3");
-        expect(console.log).toHaveBeenCalledWith("♘(g1):", "f3, h3");
+        expect(board.showAllPossibleMoves(PLAYER_COLOR.WHITE)).toStrictEqual([
+          {
+            position: { row: 6, col: 0 },
+            possibleMoves: [
+              { row: 5, col: 0 },
+              { row: 4, col: 0 },
+            ],
+          },
+          {
+            position: { row: 6, col: 1 },
+            possibleMoves: [
+              { row: 5, col: 1 },
+              { row: 4, col: 1 },
+            ],
+          },
+          {
+            position: { row: 6, col: 2 },
+            possibleMoves: [
+              { row: 5, col: 2 },
+              { row: 4, col: 2 },
+            ],
+          },
+          {
+            position: { row: 6, col: 3 },
+            possibleMoves: [
+              { row: 5, col: 3 },
+              { row: 4, col: 3 },
+            ],
+          },
+          {
+            position: { row: 6, col: 4 },
+            possibleMoves: [
+              { row: 5, col: 4 },
+              { row: 4, col: 4 },
+            ],
+          },
+          {
+            position: { row: 6, col: 5 },
+            possibleMoves: [
+              { row: 5, col: 5 },
+              { row: 4, col: 5 },
+            ],
+          },
+          {
+            position: { row: 6, col: 6 },
+            possibleMoves: [
+              { row: 5, col: 6 },
+              { row: 4, col: 6 },
+            ],
+          },
+          {
+            position: { row: 6, col: 7 },
+            possibleMoves: [
+              { row: 5, col: 7 },
+              { row: 4, col: 7 },
+            ],
+          },
+          { position: { row: 7, col: 0 }, possibleMoves: [] },
+          {
+            position: { row: 7, col: 1 },
+            possibleMoves: [
+              { row: 5, col: 0 },
+              { row: 5, col: 2 },
+            ],
+          },
+          { position: { row: 7, col: 2 }, possibleMoves: [] },
+          { position: { row: 7, col: 3 }, possibleMoves: [] },
+          { position: { row: 7, col: 4 }, possibleMoves: [] },
+          { position: { row: 7, col: 5 }, possibleMoves: [] },
+          {
+            position: { row: 7, col: 6 },
+            possibleMoves: [
+              { row: 5, col: 5 },
+              { row: 5, col: 7 },
+            ],
+          },
+          { position: { row: 7, col: 7 }, possibleMoves: [] },
+        ]);
       });
     });
   });

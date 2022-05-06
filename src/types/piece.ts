@@ -1,3 +1,4 @@
+import { Board } from "../board";
 import { Piece } from "../pieces/piece";
 import { Taxis } from "./axis";
 import { PLAYER_COLOR } from "./playerColor";
@@ -19,9 +20,8 @@ export type TSpecialMove = {
   axis: Taxis;
   from: TPosition;
   to: TPosition;
-  cells: (Piece | null)[][];
-  currentTurn: number;
   promotion: PROMOTION_STRING | null | undefined;
+  board: Board;
 };
 
 export type TListMoves = {

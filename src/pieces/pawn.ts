@@ -8,6 +8,7 @@ import { Knight } from "./knight";
 import { TPosition } from "../types/position";
 import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
 import { PROMOTION_STRING, TListMoves, TMove, TPiece, TSpecialMove } from "../types/piece";
+import { Board } from "../board";
 
 export class Pawn extends Piece {
   private isTwoStepMoved = false;
@@ -25,27 +26,27 @@ export class Pawn extends Piece {
     }
   }
 
-  specialMove({ turn, axis, from, to, cells, currentTurn, promotion }: TSpecialMove) {
-    if (this.shouldPromotion(to, cells.length)) {
+  specialMove({ turn, axis, from, to, board, promotion }: TSpecialMove) {
+    if (this.shouldPromotion(to, board.cells.length)) {
       if (!promotion) throw new Error("the piece must promote");
       const newPiece = this.promotion(promotion);
-      cells[from.row][from.col] = newPiece;
+      board.cells[from.row][from.col] = newPiece;
       return true;
     } else {
       if (promotion) throw new Error("the piece cannot promote from the current place");
     }
-    return this.enPassant(turn, axis, to, cells, currentTurn);
+    return this.enPassant(turn, axis, to, board);
   }
 
-  private enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, cells: (Piece | null)[][], currentTurn: number) {
+  private enPassant(turn: PLAYER_COLOR, axis: Taxis, to: TPosition, board: Board) {
     if (Math.abs(axis.x) !== 1 || axis.y !== 1) return false;
     const row: number = to.row + (turn === PLAYER_COLOR.WHITE ? 1 : -1);
-    if (row < 0 || cells.length - 1 < row) return false;
-    const piece = cells[row][to.col];
+    if (row < 0 || board.cells.length - 1 < row) return false;
+    const piece = board.cells[row][to.col];
     if (!piece || piece.color === turn) return false;
-    if (piece.lastMovedTurn !== currentTurn - 1) return false;
+    if (piece.lastMovedTurn !== board.currentTurn - 1) return false;
     if (!(piece instanceof Pawn) || !piece.isTwoStepMoved) return false;
-    cells[row][to.col] = null;
+    board.cells[row][to.col] = null;
 
     return true;
   }

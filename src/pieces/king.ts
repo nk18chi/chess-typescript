@@ -5,6 +5,7 @@ import { Taxis } from "../types/axis";
 import { TPosition } from "../types/position";
 import { Rook } from "./rook";
 import { TListMoves, TMove, TPiece, TSpecialMove } from "../types/piece";
+import { Board } from "../board";
 
 export class King extends Piece {
   constructor(props: TPiece) {
@@ -28,8 +29,8 @@ export class King extends Piece {
     return true;
   }
 
-  specialMove({ turn, axis, from, to, cells }: TSpecialMove) {
-    return this.castling(turn, axis, from, to, cells);
+  specialMove({ turn, axis, from, to, board }: TSpecialMove) {
+    return this.castling(turn, axis, from, to, board);
   }
 
   listMoves({ cells, curPosition }: TListMoves): TPosition[] {
@@ -46,17 +47,17 @@ export class King extends Piece {
     return super.listMoves({ curPosition, cells, moves });
   }
 
-  private castling(turn: PLAYER_COLOR, axis: Taxis, from: TPosition, to: TPosition, cells: (Piece | null)[][]) {
+  private castling(turn: PLAYER_COLOR, axis: Taxis, from: TPosition, to: TPosition, board: Board) {
     if (Math.abs(axis.x) !== 2 || axis.y !== 0) return false;
     if (this.lastMovedTurn !== 0) return false;
-    if (from.row !== (turn === PLAYER_COLOR.WHITE ? cells.length - 1 : 0) || from.col !== 4) return false;
-    const col = axis.x > 0 ? cells.length - 1 : 0;
-    const rook = cells[from.row][col];
+    if (from.row !== (turn === PLAYER_COLOR.WHITE ? board.cells.length - 1 : 0) || from.col !== 4) return false;
+    const col = axis.x > 0 ? board.cells.length - 1 : 0;
+    const rook = board.cells[from.row][col];
     if (!rook || !(rook instanceof Rook) || rook.lastMovedTurn !== 0) return false;
     let startCol = 4;
-    while (0 < startCol && startCol < cells.length - 1) {
+    while (0 < startCol && startCol < board.cells.length - 1) {
       if (startCol !== 4) {
-        const piece = cells[from.row][startCol];
+        const piece = board.cells[from.row][startCol];
         if (piece) return false;
         // TODO: check if the king get attacked
         // TODO: check if the areas get attacked
@@ -64,7 +65,7 @@ export class King extends Piece {
       startCol += axis.x > 0 ? 1 : -1;
     }
 
-    [cells[from.row][col], cells[to.row][axis.x > 0 ? to.col - 1 : to.col + 1]] = [null, cells[from.row][col]];
+    [board.cells[from.row][col], board.cells[to.row][axis.x > 0 ? to.col - 1 : to.col + 1]] = [null, board.cells[from.row][col]];
     return true;
   }
 }
