@@ -1,4 +1,5 @@
 import { Board } from "./board";
+import { MAP_SIZE } from "./constant";
 import { Input } from "./input";
 import { getPromotionEnum } from "./pieces/piece";
 import { PLAYER_COLOR } from "./types/playerColor";
@@ -19,7 +20,7 @@ enum COMMAND {
 const colorLength: number = Object.keys(PLAYER_COLOR).length / 2;
 export class Game implements IGame {
   readonly input: Input = new Input();
-  private board: Board = new Board(8);
+  private board: Board = new Board(MAP_SIZE);
   private turn = 0;
   private isGameOnGoing = true;
   private winCountMap: { [key: string]: number } = {};

@@ -3,6 +3,7 @@ import { Board } from "./board";
 import { Input } from "./input";
 import { PLAYER_COLOR } from "./types/playerColor";
 import * as inputOriginal from "./input";
+import { MAP_SIZE } from "./constant";
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 /**
@@ -12,7 +13,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 jest.mock("./board.ts");
 const BoardActual = jest.requireActual("./board");
-const BOARD_NUMBER = 8;
+const BOARD_NUMBER = MAP_SIZE;
 
 describe("Game", () => {
   const original = inputOriginal.Input;

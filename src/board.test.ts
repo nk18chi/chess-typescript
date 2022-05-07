@@ -1,4 +1,5 @@
 import { Board } from "./board";
+import { MAP_SIZE } from "./constant";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
@@ -54,11 +55,10 @@ const defaultBoardPosition = [
   ],
 ];
 
-const BOARD_NUMBER = 8;
 describe("Board", () => {
   let board: Board;
   beforeEach(() => {
-    board = new Board(BOARD_NUMBER);
+    board = new Board(MAP_SIZE);
   });
 
   describe("constructor", () => {

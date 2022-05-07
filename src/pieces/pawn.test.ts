@@ -7,6 +7,7 @@ import { Queen } from "./queen";
 import { Rook } from "./rook";
 import { Piece } from "./piece";
 import { Board } from "../board";
+import { MAP_SIZE } from "../constant";
 
 const testcases = [
   {
@@ -75,11 +76,10 @@ const promotionParams = {
   promotion: null,
 };
 
-const mapSize = 8;
 describe("Pawn", () => {
-  const board = new Board(mapSize);
+  const board = new Board(MAP_SIZE);
   beforeEach(() => {
-    board.cells = Array.from(Array(mapSize), () => new Array(mapSize).fill(null));
+    board.cells = Array.from(Array(MAP_SIZE), () => new Array(MAP_SIZE).fill(null));
   });
   describe("validate method", () => {
     testcases.forEach((testcase) => {

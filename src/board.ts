@@ -10,6 +10,7 @@ import { KINGS } from "./types/sign";
 import { Taxis } from "./types/axis";
 import { TPosition } from "./types/position";
 import { PROMOTION_STRING } from "./types/piece";
+import { MAP_SIZE } from "./constant";
 
 // TODO: show piece history
 // TODO: stop the game if player cannot move any pieces
@@ -30,7 +31,7 @@ type TPossibleMoves = {
 };
 
 export class Board implements IBoard {
-  private mapSize = 8;
+  private mapSize = MAP_SIZE;
   private aliveKingsMap: { [key: number]: boolean } = {};
   public currentTurn = 0;
   public cells: (Piece | null)[][] = [[]];
