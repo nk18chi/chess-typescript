@@ -55,12 +55,17 @@ export class King extends Piece {
     const rook = board.cells[from.row][col];
     if (!rook || !(rook instanceof Rook) || rook.lastMovedTurn !== 0) return false;
     let startCol = 4;
+    const moveSet = new Set();
+    board.showAllPossibleMoves(turn === PLAYER_COLOR.WHITE ? PLAYER_COLOR.BLACK : PLAYER_COLOR.WHITE).forEach((move) => {
+      move.possibleMoves.forEach((possibleMove) => {
+        moveSet.add(JSON.stringify(possibleMove));
+      });
+    });
     while (0 < startCol && startCol < board.cells.length - 1) {
+      if (moveSet.has(JSON.stringify({ row: from.row, col: startCol }))) return false;
       if (startCol !== 4) {
         const piece = board.cells[from.row][startCol];
         if (piece) return false;
-        // TODO: check if the king get attacked
-        // TODO: check if the areas get attacked
       }
       startCol += axis.x > 0 ? 1 : -1;
     }
