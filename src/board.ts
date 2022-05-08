@@ -10,20 +10,31 @@ import { KINGS } from "./types/sign";
 import { Taxis } from "./types/axis";
 import { TPosition } from "./types/position";
 import { PROMOTION_STRING } from "./types/piece";
+import { MAP_SIZE } from "./constant";
 
+// TODO: show piece history
+// TODO: stop the game if player cannot move any pieces
 interface IBoard {
   initialize(): void;
   show(): void;
   parsePosition(position: string): TPosition;
+  toPositionString(position: TPosition): string;
   update(turn: PLAYER_COLOR, from: TPosition, to: TPosition, promotion: PROMOTION_STRING | null): void;
   isKing(color: PLAYER_COLOR): boolean;
+  showPossibleMoves(position: TPosition): TPosition[];
+  showAllPossibleMoves(color: PLAYER_COLOR): TPossibleMoves[];
 }
 
+type TPossibleMoves = {
+  position: TPosition;
+  possibleMoves: TPosition[];
+};
+
 export class Board implements IBoard {
-  private mapSize = 8;
-  private cells: (Piece | null)[][] = [[]];
+  private mapSize = MAP_SIZE;
   private aliveKingsMap: { [key: number]: boolean } = {};
-  private currentTurn = 0;
+  public currentTurn = 0;
+  public cells: (Piece | null)[][] = [[]];
   constructor(mapSize: number) {
     if (mapSize) this.mapSize = mapSize;
   }
@@ -68,6 +79,7 @@ export class Board implements IBoard {
       this.cells[6][i] = new Pawn({ color: PLAYER_COLOR.WHITE });
     }
   }
+
   show() {
     console.log("");
     let i: number = this.mapSize;
@@ -102,6 +114,10 @@ export class Board implements IBoard {
     };
   }
 
+  toPositionString(position: TPosition) {
+    return String.fromCharCode(position.col + 97) + String((position.row - this.mapSize) * -1);
+  }
+
   update(turn: PLAYER_COLOR, from: TPosition, to: TPosition, promotion: PROMOTION_STRING | null = null) {
     const errorOutOfBoard = "your select is out of the board";
     if (from.row < 0 || this.mapSize <= from.row) throw new Error(errorOutOfBoard);
@@ -125,7 +141,7 @@ export class Board implements IBoard {
       axis.y *= -1;
     }
 
-    const isMoved = piece.specialMove({ turn, axis, from, to, cells: this.cells, currentTurn: this.currentTurn, promotion });
+    const isMoved = piece.specialMove({ turn, axis, from, to, board: this, promotion });
     if (!isMoved) {
       if (!piece.validate(axis, dest !== null)) throw new Error("the piece cannot move to the destination");
       if (this.isPieceOnWay(from, to)) throw new Error("there is a piece on your way");
@@ -141,6 +157,28 @@ export class Board implements IBoard {
 
   isKing(color: PLAYER_COLOR) {
     return this.aliveKingsMap[color];
+  }
+
+  showPossibleMoves(position: TPosition) {
+    const piece = this.cells[position.row][position.col];
+    if (!piece) throw new Error("Please select a piece to show all possible moves for it");
+    return piece.listMoves({ curPosition: position, cells: this.cells });
+  }
+
+  showAllPossibleMoves(color: PLAYER_COLOR) {
+    const moves: TPossibleMoves[] = [];
+    this.cells.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (!cell || cell.color !== color) return;
+        const position: TPosition = {
+          row: i,
+          col: j,
+        };
+        const possibleMoves = cell.listMoves({ curPosition: position, cells: this.cells });
+        moves.push({ position, possibleMoves });
+      });
+    });
+    return moves;
   }
 
   private isPieceOnWay(from: TPosition, to: TPosition): boolean {

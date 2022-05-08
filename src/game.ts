@@ -1,4 +1,5 @@
 import { Board } from "./board";
+import { delay, MAP_SIZE } from "./constant";
 import { Input } from "./input";
 import { getPromotionEnum } from "./pieces/piece";
 import { PLAYER_COLOR } from "./types/playerColor";
@@ -19,7 +20,7 @@ enum COMMAND {
 const colorLength: number = Object.keys(PLAYER_COLOR).length / 2;
 export class Game implements IGame {
   readonly input: Input = new Input();
-  private board: Board = new Board(8);
+  private board: Board = new Board(MAP_SIZE);
   private turn = 0;
   private isGameOnGoing = true;
   private winCountMap: { [key: string]: number } = {};
@@ -80,7 +81,7 @@ export class Game implements IGame {
       console.log(`${PLAYER_COLOR[this.turn]} to move`);
       const answer: string = (await this.input.type("Enter UCI(type 'help' for help) ")).toLowerCase();
       const moveTo = answer.match(/^([a-z]+[0-9]+)([a-z]+[0-9]+)([q,r,b,k]{0,1})$/);
-      // const square = answer.match(/^([a-z]+[0-9]+)$/);
+      const square = answer.match(/^([a-z]+[0-9]+)$/);
       switch (answer) {
         case COMMAND.HELP:
           console.log("* type 'help' for help");
@@ -99,7 +100,15 @@ export class Game implements IGame {
           isPlayerActionDone = true;
           break;
         case COMMAND.MOVES:
-          isPlayerActionDone = true;
+          this.board.showAllPossibleMoves(this.turn).forEach((move) => {
+            const { position, possibleMoves } = move;
+            const piece = this.board.cells[position.row][position.col];
+            if (!piece) return;
+            console.log(
+              `${piece.show()}(${this.board.toPositionString(position)}):`,
+              possibleMoves.map((possibleMove) => this.board.toPositionString(possibleMove)).join(", ")
+            );
+          });
           break;
         default:
           if (moveTo) {
@@ -115,6 +124,14 @@ export class Game implements IGame {
                 console.error(e.message);
               }
             }
+          } else if (square) {
+            const cur = this.board.parsePosition(square[1]);
+            console.log(
+              this.board
+                .showPossibleMoves(cur)
+                .map((move) => this.board.toPositionString(move))
+                .join(", ")
+            );
           }
       }
     }

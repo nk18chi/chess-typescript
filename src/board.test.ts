@@ -1,4 +1,5 @@
 import { Board } from "./board";
+import { MAP_SIZE } from "./constant";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
@@ -54,11 +55,10 @@ const defaultBoardPosition = [
   ],
 ];
 
-const BOARD_NUMBER = 8;
 describe("Board", () => {
   let board: Board;
   beforeEach(() => {
-    board = new Board(BOARD_NUMBER);
+    board = new Board(MAP_SIZE);
   });
 
   describe("constructor", () => {
@@ -186,6 +186,103 @@ describe("Board", () => {
         board.update(PLAYER_COLOR.WHITE, { col: 4, row: 6 }, { col: 4, row: 0 });
         expect(board.isKing(PLAYER_COLOR.WHITE)).toBe(true);
         expect(board.isKing(PLAYER_COLOR.BLACK)).toBe(false);
+      });
+    });
+    describe("showPossibleMoves", () => {
+      it("should show possible moves", () => {
+        board.initialize();
+        expect(board.showPossibleMoves({ row: 1, col: 0 })).toStrictEqual([
+          { row: 2, col: 0 },
+          { row: 3, col: 0 },
+        ]);
+      });
+      it("should throw an error if there is no piece in the selected ares", () => {
+        console.log = jest.fn();
+        board.initialize();
+        expect(() => board.showPossibleMoves({ row: 2, col: 0 })).toThrow("Please select a piece to show all possible moves for it");
+      });
+    });
+    describe("showAllPossibleMoves", () => {
+      it("should show all possible moves", () => {
+        board.initialize();
+        expect(board.showAllPossibleMoves(PLAYER_COLOR.WHITE)).toStrictEqual([
+          {
+            position: { row: 6, col: 0 },
+            possibleMoves: [
+              { row: 5, col: 0 },
+              { row: 4, col: 0 },
+            ],
+          },
+          {
+            position: { row: 6, col: 1 },
+            possibleMoves: [
+              { row: 5, col: 1 },
+              { row: 4, col: 1 },
+            ],
+          },
+          {
+            position: { row: 6, col: 2 },
+            possibleMoves: [
+              { row: 5, col: 2 },
+              { row: 4, col: 2 },
+            ],
+          },
+          {
+            position: { row: 6, col: 3 },
+            possibleMoves: [
+              { row: 5, col: 3 },
+              { row: 4, col: 3 },
+            ],
+          },
+          {
+            position: { row: 6, col: 4 },
+            possibleMoves: [
+              { row: 5, col: 4 },
+              { row: 4, col: 4 },
+            ],
+          },
+          {
+            position: { row: 6, col: 5 },
+            possibleMoves: [
+              { row: 5, col: 5 },
+              { row: 4, col: 5 },
+            ],
+          },
+          {
+            position: { row: 6, col: 6 },
+            possibleMoves: [
+              { row: 5, col: 6 },
+              { row: 4, col: 6 },
+            ],
+          },
+          {
+            position: { row: 6, col: 7 },
+            possibleMoves: [
+              { row: 5, col: 7 },
+              { row: 4, col: 7 },
+            ],
+          },
+          { position: { row: 7, col: 0 }, possibleMoves: [] },
+          {
+            position: { row: 7, col: 1 },
+            possibleMoves: [
+              { row: 5, col: 0 },
+              { row: 5, col: 2 },
+            ],
+          },
+          { position: { row: 7, col: 2 }, possibleMoves: [] },
+          { position: { row: 7, col: 3 }, possibleMoves: [] },
+          { position: { row: 7, col: 4 }, possibleMoves: [] },
+          { position: { row: 7, col: 5 }, possibleMoves: [] },
+          {
+            position: { row: 7, col: 6 },
+            possibleMoves: [
+              { row: 5, col: 5 },
+              { row: 5, col: 7 },
+            ],
+          },
+          { position: { row: 7, col: 7 }, possibleMoves: [] },
+        ]);
       });
     });
   });

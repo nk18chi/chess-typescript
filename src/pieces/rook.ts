@@ -2,7 +2,8 @@ import { Piece } from "./piece";
 import { PLAYER_COLOR } from "../types/playerColor";
 import { BLACK_SIGN, WHITE_SIGN } from "../types/sign";
 import { Taxis } from "../types/axis";
-import { TPiece } from "../types/piece";
+import { TListMoves, TMove, TPiece } from "../types/piece";
+import { TPosition } from "../types/position";
 
 export class Rook extends Piece {
   constructor(props: TPiece) {
@@ -23,5 +24,19 @@ export class Rook extends Piece {
     if (!super.validate(axis, isEnemy)) return false;
     if (Math.abs(axis.y) > 0 && Math.abs(axis.x) > 0) return false;
     return true;
+  }
+
+  listMoves({ cells, curPosition }: TListMoves): TPosition[] {
+    const moves: TMove[] = [
+      // vertically
+      { row: 1, col: 0, isRepeat: true },
+      { row: -1, col: 0, isRepeat: true },
+
+      //horizontally
+      { row: 0, col: 1, isRepeat: true },
+      { row: 0, col: -1, isRepeat: true },
+    ];
+
+    return super.listMoves({ curPosition, cells, moves });
   }
 }
