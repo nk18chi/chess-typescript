@@ -44,7 +44,7 @@ export class Pawn extends Piece {
     if (row < 0 || board.cells.length - 1 < row) return false;
     const piece = board.cells[row][to.col];
     if (!piece || piece.color === turn) return false;
-    if (piece.lastMovedTurn !== board.currentTurn - 1) return false;
+    if (piece.lastMovedTurn !== board.currentTurn) return false;
     if (!(piece instanceof Pawn) || !piece.isTwoStepMoved) return false;
     board.cells[row][to.col] = null;
 
