@@ -3,8 +3,7 @@ import { Board } from "./board";
 import { Input } from "./input";
 import { PLAYER_COLOR } from "./types/playerColor";
 import * as inputOriginal from "./input";
-import { MAP_SIZE } from "./constant";
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+import { delay, MAP_SIZE } from "./constant";
 
 /**
  * Board class is mock: This is my original code so unit testing for board is necessary.

@@ -1,5 +1,5 @@
 import { Board } from "./board";
-import { MAP_SIZE } from "./constant";
+import { delay, MAP_SIZE } from "./constant";
 import { Input } from "./input";
 import { getPromotionEnum } from "./pieces/piece";
 import { PLAYER_COLOR } from "./types/playerColor";
